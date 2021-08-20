@@ -19,7 +19,7 @@ class PostController extends Controller
     public function index(){
         //return view('posts.index'); //viewのpostsのindex.blade.phpを返す
 
-        $posts=Post::all();     //作成されている投稿をすべて取得
+        $post=Post::all();     //作成されている投稿をすべて取得
         return view("posts.index",compact("posts"));
     }
 
@@ -40,6 +40,11 @@ class PostController extends Controller
 
     public function edit(Post $post){
         return view("posts.edit",compact("post"));
+    }
+
+    public function destroy(POst $post){
+        $post->delete();
+        return redirect()->route("posts.index");//indexへリダイレクト
     }
 
     public function update(Request $request,Post $post){
