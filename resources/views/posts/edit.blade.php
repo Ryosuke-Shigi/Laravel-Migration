@@ -1,0 +1,8 @@
+<!--投稿-->
+<form method="POST" action="/posts/{{ $post->id }}">
+    {{ csrf_field() }}
+    <input type="hidden" name="_method" value="PUT">
+    <input type="text" name="title" value="{{ $post->title }}">
+    <input type="tett" name="content" value="{{ $post->content }}">
+    <input type="submit">
+</form>

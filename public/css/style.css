@@ -1,0 +1,457 @@
+@charset "UTF-8";
+
+:root{
+  --form-backcolor:rgba(255,255,255,0.5);
+}
+/* リセット */
+body, h1,h2,h3,h4,h5,h6,p,ul,li,figure{
+  margin:0;
+  padding:0;
+  list-style: none;
+}
+/*　初期設定　*/
+body{
+  font-size:15px;
+  font-family:"Noto Sans Jp", sans-serif;
+  box-sizing:border-box;  /*幅と高さに　padding borderを含める*/
+  overflow:hidden;
+}
+
+
+
+
+/*　リンク　*/
+.nav a:hover{  /*マスカーソルが上に乗ったとき*/
+  opacity: 0.5;
+  color:blue;
+  box-shadow:0px 5px 4px 2px gray;
+  transition: all 300ms ease;
+  transform:scale(1.4) translate(0,-2px);
+}
+.sidemenu a:hover{
+  opacity:0.5;
+  color: brown;
+  transition:all 300ms ease;
+  transform:translate(10px);
+}
+
+
+
+a{
+  display:block;          /*領域で選択できるようにする*/
+  text-decoration: none;  /*下線を消す*/
+  justify-content: center;
+  align-items: center;
+}
+
+/*ページ全体*/
+.pagebody{
+  height:100vh;
+  width:100vw;
+  background-color: gray;
+}
+/*ヘッダー*/
+.header{
+  height:25%;
+  width:auto;
+}
+/*タイトル*/
+.title{
+  height:100%;
+  background: url("../img/header.jpg") center / cover no-repeat;
+  font-size:22px;
+}
+/*ナビゲーション*/
+.nav{
+  height:5%;
+  overflow: hidden; /*はみ出した分は非表示*/
+  background:linear-gradient(180deg,rgb(160, 245, 171),rgb(37, 235, 64),rgb(149, 148, 241));
+}
+.nav ul{
+  padding:5px;
+  font-size:25px;
+  list-style: none;
+  display:flex;
+}
+.nav li{
+  width:20%;
+  text-align: center;
+}
+/*フッター*/
+.footer{
+  height:5%;
+  font-size:20px;
+  font-weight: bold;
+  background:linear-gradient(180deg,rgb(124, 126, 125),rgb(70, 82, 255),rgb(124, 126, 125));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/*メインコンテンツ　バック*/
+.mainbody{
+  height:65%;
+  width:auto;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;            /*はみ出たら次の行へ*/
+  align-content: center;      /*要素の行間を詰める（中心に）*/
+  background-color: rgb(216, 216, 216);
+}
+
+
+
+
+/* TOP */
+/*文章*/
+.topcontenta{
+  width:75%;
+  height:95%;
+  background-color: bisque;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+.topcontenta .contents{
+  width:95%;
+  height:95%;
+}
+.topcontenta .contents p{
+  font-size:25px;
+  line-height: 50px;
+}
+.topcontenta .contents h2{
+  font-size:30px;
+  line-height:70px;
+  font-weight: bold;
+}
+/*サイドメニュー*/
+.topcontentb{
+  width:20%;
+  height:95%;
+  background-color: darksalmon;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+.topcontentb .sidemenu{
+  width:95%;
+  height:95%;
+}
+.topcontentb .sidemenu ul{
+  line-height: 50px;
+  border:0.5px solid black;
+}
+.topcontentb .sidemenu li:first-of-type{
+  font-size:25px;
+  font-weight: bold;
+  text-align: center;
+  background-color:rgba(255, 0, 0, 0.445);
+}
+.topcontentb .sidemenu li:not(:first-of-type){
+  font-size:22px;
+  padding-left: 10px;
+  background-color: rgba(255, 217, 0, 0.445);
+}
+.topcontentb .sidemenu li:not(:last-of-type){
+  border-bottom:0.5px solid black;
+}
+
+/*自己紹介*/
+/*画像*/
+.introcontenta{
+  width:35%;
+  height:45%;
+}
+/*プロフィール*/
+.introcontentb{
+  width:55%;
+  height:45%;
+  background-color:rgb(170, 255, 148);
+}
+/*自己紹介文*/
+.introcontentc{
+  width:90%;
+  height:50%;
+  background-color:rgba(209, 209, 209, 0.822);
+}
+
+/*自己紹介　画像*/
+.introcontenta .introimage{
+  width:100%;
+  height:100%;
+  background: url(../img/profileimg.jpg) center / cover no-repeat;
+  background-size:cover;
+}
+
+/*プロフィール欄*/
+.introprofile dl{
+  line-height: 40px;
+  padding:10px 20px;
+  font-size:20px;
+}
+.introprofile dt{
+  float:left; /*横に並べる*/
+}
+自己紹介文のパディング
+.introcontents{
+  padding: 20px 40px;
+}
+.introprofile{
+  background-color:rgba(255, 255, 255, 0.479);
+}
+
+/*自己紹介文　テキスト*/
+.introcontents h2{
+  font-size:24px;
+  line-height:70px;
+  font-weight: bold;
+}
+.introcontents p{
+  font-size:20px;
+  line-height: 50px;
+}
+
+
+/*問い合わせ内容*/
+.contactform{
+  width:95%;
+  height:95%;
+  background:url(../img/formback.JPG) center /  cover no-repeat;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  font-size:20px;
+}
+
+
+
+/*項目名のフォントをまとめて*/
+.itemfont{
+  font-size:25px;
+  font-weight: bold;
+}
+/*項目　「名前」*/
+.itemname{
+  width:30%;
+  height:8%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:var(--form-backcolor);
+}
+.contentname{
+  width:60%;
+  height:8%;
+  display: flex;
+  align-items: center;
+  background-color: var(--form-backcolor);
+}
+.inputname{
+  width:50%;
+  height:70%;
+  margin-left: 4.5%;
+  font-size:20px;
+}
+
+/*項目　「性別」*/
+.itemjender{
+  width:30%;
+  height:8%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:var(--form-backcolor);
+}
+.contentmale{
+  width:30%;
+  height:8%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size:22px;
+  font-weight: bold;
+  color:blue;
+  background-color:var(--form-backcolor);
+}
+.contentfemale{
+  width:30%;
+  height:8%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size:22px;
+  font-weight: bold;
+  color:red;
+  background-color:var(--form-backcolor);
+}
+
+/*問い合わせ内容*/
+.itemcontents{
+  width:30%;
+  height:40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:var(--form-backcolor);
+}
+.contenttext{
+  width:60%;
+  height:40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--form-backcolor);
+  /*overflow: scroll;*/ /*超えた場合にスクロールをつける*/
+}
+.inputcontents{
+  width:90%;
+  height:98%;
+  resize:none; /*none リサイズ禁止　vertical 横固定　horizontal 縦固定*/
+  font-size:22px;
+}
+
+/*項目　「添付」*/
+.itemattached{
+  width:30%;
+  height:10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:var(--form-backcolor);
+}
+.contentattached{
+  width:60%;
+  height:10%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color:var(--form-backcolor);
+}
+.fileattached{
+  width:90%;
+  height:auto;
+  font-size:20px;
+}
+
+/*項目　「送信ボタン」*/
+.contentsubmit{
+  width:90%;
+  height:10%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color:var(--form-backcolor);
+}
+.filesubmit{
+  width:20%; /*修正*/
+  height:60%;
+  font-size:20px;
+}
+/*エラーメッセージフォント*/
+.errormsg{
+    width:90%;
+    height:3%;
+    font-size:0.8rem;
+    display:flex;
+    justify-content:center;
+    color:red;
+    background-color:var(--form-backcolor);
+}
+
+@media screen and (max-width:380px){
+
+    /*タイトル*/
+    .header{
+        height:10%;
+    }
+    /*ナビゲーションバー*/
+    .nav{
+        height:4%;
+    }
+    .nav ul{
+        align-items: center;
+        font-size:10px;
+    }
+    /*フッター*/
+    .footer{
+        font-size:12px;
+        height:3%;
+    }
+    /*メインコンテンツ*/
+    .mainbody{
+        height:83%;
+        flex-wrap:wrap;
+    }
+    /*TOPページ*/
+    .topcontenta{
+        width:100%;
+        height:74%;
+    }
+    .topcontenta .contents P{
+        font-size:20px;
+        line-height:25px;
+    }
+    .topcontenta .contents h2{
+        font-size:25px;
+        line-height:50px;
+    }
+    .topcontentb{
+        width:100%;
+        height:26%;
+    }
+    .topcontentb .sidemenu ul{
+        line-height:40px;
+    }
+
+    /*自己紹介*/
+    .introcontenta{
+        width:100%;
+        height:25%;
+    }
+    .introcontentb{
+        width:100%;
+        height:25%;
+    }
+    .introprofile dl{
+        line-height:28px;
+        font-size:18px;
+    }
+    .introcontents{
+        padding:10px 20px;
+    }
+    .introcontents h2{
+        font-size:20px;
+        line-height:50px;
+    }
+    .introcontents p{
+        line-height:35px;
+    }
+
+
+    /*問い合わせ内容*/
+    .itemfont{
+        font-size:20px;
+    }
+    .inputname{
+        font-size:15px;
+        width:90%;
+    }
+    .inputcontents{
+        font-size:20px;
+    }
+
+    .itemcontents{
+        writing-mode:vertical-rl;
+    }
+    .fileattached{
+        font-size:15px;
+    }
+    .filesubmit{
+        width:50%;
+        font-size:15px;
+    }
+
+}

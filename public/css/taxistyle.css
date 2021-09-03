@@ -1,0 +1,89 @@
+@charset "UTF-8";
+
+:root{
+    --form-backcolor:rgba(255,255,255,0.5);
+  }
+  /* リセット */
+  body, h1,h2,h3,h4,h5,h6,p,ul,li,figure{
+    margin:0;
+    padding:0;
+    list-style: none;
+  }
+  /*　初期設定　*/
+  body{
+    font-size:15px;
+    font-family:"Noto Sans Jp", sans-serif;
+    box-sizing:border-box;  /*幅と高さに　padding borderを含める*/
+    overflow:hidden;
+  }
+
+.wrapper{
+    width:100vw;
+    height:100vh;
+    display:flex;
+    font-size:15px;
+    background-color:rgba(120,120,120,120);
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.wrapper .container{
+    height:80%;
+    width:80%;
+    font-size:25px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: center;
+}
+
+/*formのスタイル*/
+.container .taxifare{
+    height:100%;
+    width:100%;
+    margin-top:50px;
+    margin-bottom:10px;
+    text-align: center;
+    border-collapse:collapse;/*セル同士の隙間をあけない*/
+}
+
+
+/*基本的な表の色*/
+.container .taxifare tr{
+    background-color:azure;
+}
+/*項目名部分は別色*/
+.container .taxifare tr:first-of-type{
+    background-color:brown;
+    height:20px;
+}
+/*偶数行を濃い目にする*/
+.container .taxifare tr:nth-of-type(even){
+    background-color:rgb(114, 248, 248);
+}
+/*１セル１セル枠をつける*/
+.container .taxifare td{
+    border:1px;
+    border-style:solid;
+}
+
+
+
+/*色々試し中*/
+.container .toTop{
+    width:100px;
+    height:50px;
+    font-size:20px;
+
+    border-radius:10px;
+}
+
+.container .formstyle{
+    margin-top:0px;
+    margin-bottom:0px;
+    width:100px;
+}
+.footer{
+    height:10px;
+    width:50%;
+    text-align: center;
+}
