@@ -11,54 +11,46 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 /*
- *　ここは　Routes
- * URLの形できたリクエストより　controller　へと分配する
+
+アドレスでリクエストされたものより　コントローラーへ分配します
+
 */
 
-//　｛　名前　｝　で受け取るリクエストのしているものは、名前の部分を変数として扱える様子
-//　これでhtml上で色々変更かけたものを送らせることで返すページも違うようにできる・・・
 
-//get("リクエストされたURL" なので
-//posts　の　{postId} の　comments　の　{commentId} となる　PostIdとCommentIdは変数のような扱い
-//postId と CommentId のところで　１２３　と　４５６　が指定されリクエストされたとする
-//返す(return) 123(postId)番目のブログ記事の456(commentId)番目のコメント
-//と返す　向こうからのリクエストで変化をつける。
-//なのでページのディレクトリ構成でのURLが絶対的なものではなく、ユーザからのリクエストによって変化を出せる！
-//ちなみにこれはあくまでサンプルなので　コントローラーに飛ばすということを忘れないこと
-Route::get("posts/{postId}/comments/{commentId}",function($postId,$commentId){
-    return $postId."番のブログ投稿記事の".$commentId."番目のコメント";});
+/* ROUTES 一番最初にリクエストが通るところです　リクエストされたものを分配します
+    でもこの形では基本使わない　コントローラーで制御しているので */
+//route::get "public static function route　というのがrouteクラスにあるのかと思う"
+//なので Route　を宣言していないが扱えている　static　だから
+//アロー演算子ー＞でなくスコープ定義演算子：：なのもそのため
+/* Route::get('/',function () {    //memo ：：はクラス内に定義されているものを呼び出すもの get関数を読んでいる
+    return view('welcome'); //コントローラーでも return view(名前)で返している　ここでコールバック関数なのは　コントローラーがないときでも動くようにするため
+}); //無 *///名関数で条件を制御する　コールバック関数　を使っている様子
 
-//　/contact　でリクエストされたら　view　の　contact.blade.php を返す(bladeはお約束です)
-Route::get("/contact",function(){
-    return view("contact");
-});
+//コントローラーを通して表示
+// アドレス末尾「hello」をリクエストされたら
+//　http->controllers->HelloControllerの　top（@top)　へ
+//Route::get("top","HelloController@top");
+//Route::get("/","HelloController@top");
 
-// /users　でリクエストされたら　UserControllerのindexを呼ぶ
-Route::get("/users","UserController@index");
+//introduction　でリクエストがきたら　HelloControllerのintroductionへ
+Route::get("introduction","HelloController@introduction");
+//contact でリクエストがきたら　HelloControllerのcontactへ
+Route::get("contact","HelloController@contact");
 
-// URL  /posts/数字　のリクエストから　id　を引数にして　PostControllerのfunction showを呼ぶ
-Route::get("posts/{id}","PostController@show");
+Route::post("store","HelloController@store");
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
 
-Auth::routes();
+//課題用　トップ
+Route::get("/","TestController@top");
+Route::get("Top","TestController@top");
+//homework 1-1
+Route::post("Answer","TestController@Answer");
+//homework 1-2
+Route::post("Answer2","TestController@Answer2");
+//homework 1-3
+Route::post("Answer3","TestController@Answer3");
 
-Route::get('/home', 'HomeController@index')->name('home');
-
-//Route::resource　を使うことで　Restfull なURLを設定できる。
-//  ※ /PostsにアクセスするとPostControllerのindexアクションが実行されるようになる。
-//　　　また、ルーティングのURLと仕様するコントローラーを引数に渡すことができる
-Route::resource('posts','PostController');
-
-//以下の部分は　Cloud9　で開発している場合はhttpsでアセットを読み込む必要があるため
-//APP_ENVの値がlocalである場合はhttps接続でアセットを読み込めるようにしている
-if(env('APP_ENV')==="local"){
-    URL::forcescheme("https");
-}
+//laravel演習（ファイル読込);
+Route::post("Taxifare","TestController@Taxifare",);
