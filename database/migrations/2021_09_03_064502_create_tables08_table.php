@@ -16,6 +16,7 @@ class CreateTables08Table extends Migration
         Schema::create('tables08', function (Blueprint $table) {
             $table->Increments('id');
 
+            //一つだけユニーク制約
             $table->string('reserv_code',17)->unique();
 
             $table->integer('biz_id')->unsigned();
