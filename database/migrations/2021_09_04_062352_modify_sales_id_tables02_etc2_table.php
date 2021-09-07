@@ -32,8 +32,15 @@ class ModifySalesIdTables02Etc2Table extends Migration
      */
     public function down()
     {
-        Schema::table('tables02', function (Blueprint $table) {
-            //
+        Schema::table('tables07', function (Blueprint $table) {
+            $table->dropforeign("tables07_biz_id_ticket_code_sales_id_foreign");
         });
+        Schema::table('tables08', function (Blueprint $table) {
+        //FKを単一に
+            $table->dropforeign("tables08_biz_id_foreign");
+            $table->dropforeign("tables08_sales_id_foreign");
+            $table->dropforeign("tables08_ticket_code_foreign");
+        });
+
     }
 }

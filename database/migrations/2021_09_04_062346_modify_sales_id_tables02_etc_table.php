@@ -29,8 +29,11 @@ class ModifySalesIdTables02EtcTable extends Migration
      */
     public function down()
     {
-        Schema::table('tables', function (Blueprint $table) {
+        Schema::table('tables02', function (Blueprint $table) {
             //
+            $table->dropUnique("tables02_ticket_code_unique");
+            $table->dropUnique("tables02_sales_id_unique");
+
         });
     }
 }

@@ -34,8 +34,19 @@ class ModifyCreatedAtEtcAlltablesTable extends Migration
      */
     public function down()
     {
-        Schema::table('alltable', function (Blueprint $table) {
-            //
-        });
+        for($i=0;$i<10;$i++){
+            Schema::table($this->tb_name[$i], function (Blueprint $table) {
+                //位置をずらさないようにするために　仮のtempを作成する
+                $table->integer('temp')->after('updated_at');
+                //->change()はtimestampに対応できないので、一度消す
+                $table->dropColumn('created_at')->change();
+                $table->dropColumn('updated_at')->change();
+                //再度、同じ宣言のしかたでつくる　これでtimestampがつく
+                $table->datetime('created_at')->nullable()->change()->after('temp');
+                $table->datetime('updated_at')->nullable()->change()->after('created_at');
+                //仮カラムを消す
+                $table->dropColumn('temp');
+            });
+        }
     }
 }

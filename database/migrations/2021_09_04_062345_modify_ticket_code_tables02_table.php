@@ -15,10 +15,10 @@ class ModifyTicketCodeTables02Table extends Migration
     {
         Schema::table('tables08', function (Blueprint $table) {
             //
-            $table->dropForeign(['biz_id','ticket_code','sales_id']);
+            $table->dropForeign("tables08_biz_id_ticket_code_sales_id_foreign");
         });
         Schema::table('tables07', function (Blueprint $table) {
-            $table->dropForeign(['biz_id','ticket_code','sales_id']);
+            $table->dropForeign("tables07_biz_id_ticket_code_sales_id_foreign");
         });
     }
 
@@ -29,8 +29,15 @@ class ModifyTicketCodeTables02Table extends Migration
      */
     public function down()
     {
-        Schema::table('tables02', function (Blueprint $table) {
+        Schema::table('tables08', function (Blueprint $table) {
             //
+            $table->Foreign(['biz_id','ticket_code','sales_id'])->references(['biz_id','ticket_code','sales_id'])->on('tables02')->onUpdate('cascade')->onDelete('cascade');
         });
+        Schema::table('tables07', function (Blueprint $table) {
+            //
+            $table->Foreign(['biz_id','ticket_code','sales_id'])->references(['biz_id','ticket_code','sales_id'])->on('tables02')->onUpdate('cascade')->onDelete('cascade');
+        });
+
+
     }
 }
