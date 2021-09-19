@@ -54,3 +54,13 @@ Route::post("Answer3","TestController@Answer3");
 
 //laravel演習（ファイル読込);
 Route::post("Taxifare","TestController@Taxifare",);
+
+//チケット登録画面
+Route::get("index","TicketController@index");
+Route::post("index","TicketController@index");
+//新規登録画面
+Route::get("create","TicketController@create");
+Route::post("create","TicketController@create");
+
+Route::get("store","TicketController@store");
+Route::post("store","TicketController@store");
