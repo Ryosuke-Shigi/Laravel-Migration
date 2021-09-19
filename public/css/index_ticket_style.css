@@ -1,0 +1,61 @@
+@charset "UTF-8";
+
+:root{
+    --form-backcolor:rgba(255,255,255,0.5);
+  }
+  /* リセット */
+  body, h1,h2,h3,h4,h5,h6,p,ul,li,figure{
+    margin:0;
+    padding:0;
+    list-style: none;
+  }
+  /*　初期設定　*/
+  body{
+    font-size:15px;
+    font-family:"Noto Sans Jp", sans-serif;
+    box-sizing:border-box;  /*幅と高さに　padding borderを含める*/
+    overflow:hidden;
+  }
+
+.wrapper{
+    width:100vw;
+    height:100vh;
+    display:flex;
+    font-size:15px;
+    background-color:rgba(120,120,120,120);
+    justify-content:center;
+    align-items: center;
+    flex-wrap:wrap;
+}
+
+.container{
+    width:90%;
+    height:95%;
+    background-color: bisque;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+}
+.container .left{
+    width:30%;
+    height:100%;
+    background-color: aqua;
+}
+
+
+.container .right{
+    width:70%;
+    height:100%;
+    background-color: aquamarine;
+}
+.right .buttonfield{
+    justify-content: right;
+    display:flex;
+    justify-content: flex-end;
+}
+.right .listfield{
+    display:flex;
+    justify-content:center;
+}
