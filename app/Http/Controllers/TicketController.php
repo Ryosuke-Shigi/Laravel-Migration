@@ -19,11 +19,17 @@ class TicketController extends Controller
         return view("index_ticket");
     }
 
-    public function create(){
+    //登録画面
+    public function store(){
         return view("create_ticket");
     }
-    public function store(Request $request){
-        dump($request); //フォームからのPOSTデータ
+
+    public function delete($id){
+
+    }
+
+    //登録
+    public function create(Request $request){
 
         //モデルをインスタンス化
         $tables01 = new table01;
