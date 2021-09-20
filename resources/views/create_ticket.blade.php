@@ -11,7 +11,7 @@
 <!--メインコンテンツ-->
 @section('contents')
 
-<form method="post" action="store" enctype="multipart/form-data">
+<form method="post" action="create" enctype="multipart/form-data">
 @csrf
 <div class="container">
     <div class="contenttitle">概要</div>
@@ -80,7 +80,7 @@
 
     <div class="contenttitle">チケット設定</div>
         <input type="radio" name="tickets_kind" id="ticket_free" value="1"><label for="ticket_free">フリーチケット</label>
-        <input type="radio" name="tickest_kind" id="ticket_specified" value="2"><label for="ticket_specified">指定チケット</label>
+        <input type="radio" name="tickets_kind" id="ticket_specified" value="2"><label for="ticket_specified">指定チケット</label>
 
     <div class="contenttitle">サービス設定</div>
     <div class="itemname_line">サービス名</div>

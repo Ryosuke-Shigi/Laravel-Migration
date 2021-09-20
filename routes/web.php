@@ -61,6 +61,6 @@ Route::post("index","TicketController@index");
 //新規登録画面
 Route::get("create","TicketController@create");
 Route::post("create","TicketController@create");
-
+//登録
 Route::get("store","TicketController@store");
 Route::post("store","TicketController@store");

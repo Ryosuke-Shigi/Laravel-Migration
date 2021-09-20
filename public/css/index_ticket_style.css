@@ -50,12 +50,28 @@
     height:100%;
     background-color: aquamarine;
 }
-.right .buttonfield{
+
+/*新規登録ボタンをおくセクション*/
+.right .buttonsection{
     justify-content: right;
     display:flex;
     justify-content: flex-end;
 }
+
+/*新規登録ボタン*/
+.buttonsection .newcreatebtn{
+    height:50px;
+    width:150px;
+    font-size:30px;
+    margin-top:10px;
+    margin-right:10px;
+}
+
+
+
+
 .right .listfield{
     display:flex;
     justify-content:center;
+    align-items: center;;
 }

@@ -15,14 +15,15 @@
         <p>チケット登録</p>
     </div>
     <div class="right">
-        <div class="buttonfield">
-            <form method="post" name="newregister" action="create">
+        <div class="buttonsection">
+            <form method="post" name="newregister" action="store">
                 @csrf
-                <button type="submit">新規登録</button>
+                <button type="submit" class="newcreatebtn">新規登録</button>
             </form>
         </div>
         <div class="listfield">
             <p>登録したものをリスト表示</p>
+
         </div>
     </div>
 </div>
