@@ -14,8 +14,9 @@ use App\Models\table06;
 
 class TicketController extends Controller
 {
-    //
+    //一覧表示
     public function index(Request $request){
+
         return view("index_ticket");
     }
 
@@ -23,12 +24,12 @@ class TicketController extends Controller
     public function store(){
         return view("create_ticket");
     }
-
+    //削除画面
     public function delete($id){
 
     }
 
-    //登録
+    //登録作業
     public function create(Request $request){
 
         //モデルをインスタンス化
@@ -43,6 +44,7 @@ class TicketController extends Controller
         //全ての操作が完了するか　全てキャンセルされるか　のどちらかになる
         DB::beginTransaction();
         try{
+
             //table01の処理
             //事業者ID
             $tables01->biz_id = 1;
@@ -85,77 +87,140 @@ class TicketController extends Controller
             //tables01に値をいれる
             $tables01->save();
 
+
+
+
             //table03の処理
-            //事業者ID
-            $tables03->biz_id=1;
-            //商品番号
-            $tables03->ticket_code=$request->ticket_code;
-            //チケット紹介　？？？　概要：１　チケット紹介：２ 選択できる形にする？
-            if($request->contents_type=="概要"){
+
+            //概要・チケット紹介　それぞれ入っていればレコードわけて保存する
+
+            //概要が入力されていれば概要の分も保存
+            if(isset($request->overview)){
+                //事業者ID
+                $tables03->biz_id=1;
+                //商品番号
+                $tables03->ticket_code=$request->ticket_code;
+
+                //チケット紹介内容index
+                $tables03->contents_index=1;
+                //区分１
                 $tables03->contents_type=1;
-            }else{
-                $tables03->contents_type=2;
-            }
-            //チケット紹介内容index
-            $tables03->contents_index=1;
-            //チケット紹介内容　？？？　チケット紹介の入力情報…紹介でいいのかどうか
-            if($tables03->contents_type==1){
+                //概要のデータをいれる
                 $tables03->contents_data=$request->overview;
-            }else{
-                $tables03->contents_data=$request->introduction;
+                //tables03に値を入れる
+                $tables03->save();
+                $tables03= new table03; //newしなおさないと　オートIDが更新されない　createで試してみたが駄目だったのとりあえずこれで
+
+            }
+            //チケット紹介が入力されていればチケット紹介の分も保存
+            if(isset($request->contents_data)){
+               //事業者ID
+                $tables03->biz_id=1;
+                //商品番号
+                $tables03->ticket_code=$request->ticket_code;
+
+                //チケット紹介内容index
+                $tables03->contents_index=1;
+                //区分２
+                $tables03->contents_type=2;
+                //チケット紹介のデータを入れる
+                $tables03->contents_data=$request->contents_data;
+                //tables03に値を入れる
+                $tables03->save();
             }
 
-            //tables03に値をいれる
-            $tables03->save();
 
 
             //tables04の処理
-            //事業者ID
-            $tables04->biz_id=1;
-            //商品番号
-            $tables04->ticket_code=$request->ticket_code;
 
-            //注意事項区分　？？？　これもやはり重要注意事項・注意事項（詳細）・注意事項（料金）を選択がどこかでできる？
+
+
+            //重要注意事項
             if(isset($request->important_notes)){
+                //事業者ID
+                $tables04->biz_id=1;
+                //商品番号
+                $tables04->ticket_code=$request->ticket_code;
+                //注意事項index (現在固定)
+                $tables04->cautions_index=1;
+
                 $tables04->cautions_type=1;
-            }else if(isset($request->detail_notes)){
-                $tables04->cautions_type=2;
-            }else{
-                $tables04->cautions_type=3;
+                $tables04->cautions_text=$request->important_notes;
+                $tables04->save();
+                $tables04 = new table04;    //newしなおさないと　オートIDが更新されない！
             }
+            //詳細：注意事項
+            if(isset($request->detail_notes)){
+                //$tables04->create();
+                //事業者ID
+                $tables04->biz_id=1;
+                //商品番号
+                $tables04->ticket_code=$request->ticket_code;
+                //注意事項index (現在固定)
+                $tables04->cautions_index=1;
 
-            //注意事項index
-            $tables04->cautions_index=1;
-            //注意事項文言　？？？　
+                $tables04->cautions_type=2;
+                $tables04->cautions_text=$request->detail_notes;
+                $tables04->save();
+                $tables04 = new table04;
+            }
+            //料金：注意事項
+            if(isset($request->item_notes)){
+                //$tables04->create();
+                //事業者ID
+                $tables04->biz_id=1;
+                //商品番号
+                $tables04->ticket_code=$request->ticket_code;
+                //注意事項index (現在固定)
+                $tables04->cautions_index=1;
 
-
-
-            //tables04に値をいれる
-            $tables04->save();
+                $tables04->cautions_type=3;
+                $tables04->cautions_text=$request->item_notes;
+                $tables04->save();
+            }
 
 
             //tables05処理
-            //事業者ID
-            $tables05->biz_id=1;
-            //商品番号
-            $tables05->ticket_code=$request->ticket_code;
-            //券種IDと単価名称　？？？
+
+
+
+            //券種ID１
             if(isset($request->type_money01)){
+                //事業者ID
+                $tables05->biz_id=1;
+                //商品番号
+                $tables05->ticket_code=$request->ticket_code;
+                //キャンセル区分
+                $tables05->cancel_type=1;
+
                 $tables05->type_id=1;                           //券種ID
                 $tables05->type_name=$request->type_name01;     //単価名称
                 $tables05->cancel_rate=$request->cancel_rate01; //キャンセル料単価
                 $tables05->type_money=$request->cancel_rate01;  //キャンセル料（計算後が入る？
-            }elseif(isset($request->type_money02)){
+                //tables05に値を入れる
+                $tables05->save();
+                $tables05 = new table05;
+            }
+            //券種ID２
+            if(isset($request->type_money02)){
+                //$tables05->create();
+                //事業者ID
+                $tables05->biz_id=1;
+                //商品番号
+                $tables05->ticket_code=$request->ticket_code;
+                //キャンセル区分
+                $tables05->cancel_type=1;
+
                 $tables05->type_id=2;                           //券種ID
                 $tables05->type_name=$request->type_name02;     //単価名称
                 $tables05->cancel_rate=$request->cancel_rate02; //キャンセル料単価
                 $tables05->type_money=$request->cancel_rate02;  //キャンセル料（計算後の値がなにか入る？）
+                //tables05に値を入れる
+                $tables05->save();
             }
-            //キャンセル区分
-            $tables05->cancel_type=1;
 
-            //tables05に値を入れる
-            $tables05->save();
+
+
 
 
             //tables06の処理
