@@ -33,7 +33,7 @@
 }
 
 .container{
-    width:800px;
+    width:900px;
     height:85%;
     background-color: bisque;
     display:flex;
@@ -75,19 +75,31 @@
 /*項目入力フィールドを入れる*/
 .container .itemsector{
     height:var(--item-line-height);
-    width:65%;
+    width:61%;
     background-color:white;
     display:flex;
     align-items: center;
 }
+
 .container .buttonsector{
     height:var(--item-line-height);
-    width:15%;
+    width:19%;
     background-color:pink;
     display:flex;
     align-items: center;
     justify-content: center;
 }
+.container .filebtn{
+    height:80%;
+    width:80%;
+    font-size:15px;
+    color:rgba(0,0,0,0);
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
 
 /*料金スペース*/
 .container .price_section{
@@ -100,6 +112,9 @@
     background-color: aquamarine;
     flex-wrap: wrap;
 }
+
+
+
 
 .price_section .item_section{
     width:28%;

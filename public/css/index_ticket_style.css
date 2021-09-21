@@ -29,7 +29,7 @@
 }
 
 .container{
-    width:90%;
+    width:70%;
     height:95%;
     background-color: bisque;
     display:flex;
@@ -38,15 +38,36 @@
     text-align: center;
 
 }
+
+/*　左サイド　*/
 .container .left{
-    width:30%;
+    width:20%;
     height:100%;
     background-color: aqua;
+    display:flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+.left .buttonsection{
+    height:25%;
+    width:100%;
+}
+.left .btn{
+    width:160px;
+    height:20%;
+    font-size:20px;
+    margin-left: 10px;
+    margin-top:10px;
 }
 
 
+
+
+
+
 .container .right{
-    width:70%;
+    width:80%;
     height:100%;
     background-color: aquamarine;
 }
@@ -68,10 +89,34 @@
 }
 
 
-
-
 .right .listfield{
     display:flex;
-    justify-content:center;
-    align-items: center;;
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow:hidden;
+    padding:10px;
+}
+
+.listfield .tableitemtitle{
+    width:16%;
+    height:50px;
+    background-color:burlywood;
+    font-size:20px;
+    box-shadow: 0 0 0 1px black;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    overflow:hidden;
+    font-weight: bold;
+}
+.listfield .tableitem{
+    width:16%;
+    height:50px;
+    background-color:azure;
+    font-size:20px;
+    box-shadow: 0 0 0 1px black;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    overflow:hidden;
 }
