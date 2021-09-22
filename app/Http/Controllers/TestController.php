@@ -114,15 +114,6 @@ class TestController extends Controller
         return ceil($Time*60/$add_waittime)*$add_pay;
     }
 
-    //チケット登録画面
-    public function index_ticket(Request $request){
-        return view('index_ticket');
-    }
-    //新規登録画面
-    public function create_ticket(Request $request){
-        return view('create_ticket');
-    }
-
 
 
 }

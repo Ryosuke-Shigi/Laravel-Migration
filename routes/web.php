@@ -67,3 +67,7 @@ Route::post("delete/{id?}","TicketController@delete");
 //登録
 Route::get("store","TicketController@store");
 Route::post("store","TicketController@store");
+
+//table3一覧表示
+Route::get("index3","TicketController@index3");
+Route::get("index3","TicketController@index3");

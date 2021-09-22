@@ -16,8 +16,10 @@ class TicketController extends Controller
 {
     //一覧表示
     public function index(Request $request){
-
-        return view("index_ticket");
+        $table=DB::table('tables05')
+        ->leftjoin('tables01','tables01.ticket_code','=','tables05.ticket_code')    //table05のチケット名を基準に
+        ->paginate(10);
+        return view("index_ticket",compact('table'));
     }
 
     //登録画面
@@ -26,7 +28,8 @@ class TicketController extends Controller
     }
     //削除画面
     public function delete($id){
-
+        dump($id);
+        return redirect('index3');
     }
 
     //登録作業
@@ -38,13 +41,10 @@ class TicketController extends Controller
         $tables04 = new table04;
         $tables05 = new table05;
         $tables06 = new table06;
-
-
         //手動　トランザクション・スタート
         //全ての操作が完了するか　全てキャンセルされるか　のどちらかになる
         DB::beginTransaction();
         try{
-
             //table01の処理
             //事業者ID
             $tables01->biz_id = 1;
@@ -78,12 +78,9 @@ class TicketController extends Controller
             }
             //キャンセル料発生期限（分)
             $tables01->cancel_limit=$request->cancel_limit;
-
-
             //課題でcancel_flag　NULL不可　とりあえず値を入れておく　int
             $tables01->cancel_flag=0;
             //とりあえず０をいれておく
-
             //tables01に値をいれる
             $tables01->save();
 
@@ -91,9 +88,7 @@ class TicketController extends Controller
 
 
             //table03の処理
-
             //概要・チケット紹介　それぞれ入っていればレコードわけて保存する
-
             //概要が入力されていれば概要の分も保存
             if(isset($request->overview)){
                 //事業者ID
@@ -132,9 +127,6 @@ class TicketController extends Controller
 
 
             //tables04の処理
-
-
-
             //重要注意事項
             if(isset($request->important_notes)){
                 //事業者ID
@@ -181,9 +173,6 @@ class TicketController extends Controller
 
 
             //tables05処理
-
-
-
             //券種ID１
             if(isset($request->type_money01)){
                 //事業者ID
@@ -219,10 +208,6 @@ class TicketController extends Controller
                 $tables05->save();
             }
 
-
-
-
-
             //tables06の処理
             //事業者ID
             $tables06->biz_id=1;
@@ -252,8 +237,15 @@ class TicketController extends Controller
             DB::RollBack();             //処理を戻す
                 throw $exception;           //例外を投げる（例外を知らせる）例外メッセージの取得はExceptionのgetMessage();
         }
-
-
-        return view("index_ticket");
+        return redirect('index3');
     }
+
+    //table3の中身を表示する
+    public function index3(){
+        $table = table03::paginate(10);
+        return view("index_table3",compact('table'));
+    }
+
+
+
 }

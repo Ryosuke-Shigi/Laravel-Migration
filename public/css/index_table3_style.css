@@ -1,0 +1,81 @@
+@charset "UTF-8";
+
+:root{
+    --form-backcolor:rgba(255,255,255,0.5);
+  }
+  /* リセット */
+  body, h1,h2,h3,h4,h5,h6,p,ul,li,figure{
+    margin:0;
+    padding:0;
+    list-style: none;
+  }
+  /*　初期設定　*/
+  body{
+    font-size:15px;
+    font-family:"Noto Sans Jp", sans-serif;
+    box-sizing:border-box;  /*幅と高さに　padding borderを含める*/
+    overflow:hidden;
+  }
+  .wrapper{
+    width:100vw;
+    height:100vh;
+    display:flex;
+    font-size:15px;
+    background-color:rgba(120,120,120,120);
+    justify-content:center;
+    align-items: center;
+    flex-wrap:wrap;
+}
+.container{
+    width:90%;
+    height:95%;
+    background-color: bisque;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.container .list{
+    width:100%;
+    height:90%;
+    display:flex;
+    align-items: center;
+    justify-content:center;
+}
+.container .page{
+    width:100%;
+    height:10%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    font-size:30px;
+}
+
+.tableitem{
+    width:90%;
+    background-color:coral;
+    border-collapse:collapse; /*枠の隙間を消す*/
+
+}
+
+.titletd{
+    border:solid 1px black;
+    width:15%;
+    height:20%;
+    font-size:15px;
+    font-weight: bold;
+    text-align: center;
+}
+.itemtd{
+    border:solid 1px black;
+    width:15%;
+    height:20%;
+    font-size:20px;
+    background-color:white;
+}
+
+
+.pagination li{
+    display:inline-block;
+}

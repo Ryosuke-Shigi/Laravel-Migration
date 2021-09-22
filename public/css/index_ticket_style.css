@@ -63,20 +63,17 @@
 
 
 
-
-
-
 .container .right{
     width:80%;
     height:100%;
-    background-color: aquamarine;
 }
 
 /*新規登録ボタンをおくセクション*/
 .right .buttonsection{
-    justify-content: right;
     display:flex;
     justify-content: flex-end;
+    height:10%;
+    background-color:aquamarine;
 }
 
 /*新規登録ボタン*/
@@ -88,35 +85,42 @@
     margin-right:10px;
 }
 
-
+/*リスト表示*/
 .right .listfield{
     display:flex;
     justify-content: center;
-    flex-wrap: wrap;
-    overflow:hidden;
-    padding:10px;
+    background-color:rgb(131, 218, 218);
+    height:85%;
+}
+/*下部のlinks()用*/
+.right .listpage{
+    height:5%;
+    width:100%;
+    background-color:lemonchiffon;
+    font-size:22px;
 }
 
-.listfield .tableitemtitle{
-    width:16%;
-    height:50px;
-    background-color:burlywood;
-    font-size:20px;
-    box-shadow: 0 0 0 1px black;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    overflow:hidden;
+.pagination li{
+    display:inline-block;
+    margin-top: 5px;
+}
+
+
+.listfield .tableitem{
+    width:90%;
+    background-color:coral;
+    border-collapse:collapse; /*枠の隙間を消す*/
+
+}
+
+.listfield .titletd{
+    border:solid 1px black;
+    font-size:15px;
     font-weight: bold;
 }
-.listfield .tableitem{
-    width:16%;
-    height:50px;
-    background-color:azure;
-    font-size:20px;
-    box-shadow: 0 0 0 1px black;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    overflow:hidden;
+
+.listfield .itemtd{
+    border:solid 1px black;
+    background-color: white;
+    font-size:15px;
 }
