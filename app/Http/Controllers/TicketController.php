@@ -23,24 +23,35 @@ class TicketController extends Controller
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
         ;    //table05のチケット名を基準に
         //レコード件数取得
-        $recordnum=$table->count();
+        $recordnum=6;
+        $table=$table->paginate($recordnum);//paginateはページ切り替え時の度にここを通るようです
 
-        $table=$table->paginate(10);//paginateはページ切り替え時の度にここを通るようです
-
+        //同一チケット名で、金額が２つ入力されている場合　ひとつにまとめて一方を消す
         for($i=0;$i<$recordnum-1;$i++){
-            for($j=$i+1;$j<$recordnum;$j++){
-                if($table[$i]!=NULL && $table[$j]!=NULL&& $table[$i]->ticket_name == $table[$j]->ticket_name){
+            if(isset($table[$i+1])){
+            if($table[$i]->ticket_name == $table[$i+1]->ticket_name){
+                $table[$i]->type_name = array(0=>$table[$i]->type_name,1=>$table[$i+1]->type_name);
+                $table[$i]->type_money = array(0=>$table[$i]->type_money,1=>$table[$i+1]->type_money);
+                $table[$i+1]->id=0;
+                //unset($table[$i+1]);
+                $i+=1;
+            }
+            }
+            /* for($j=$i+1;$j<$recordnum;$j++){
+                if(isset($table[$j]) && $table[$i]->ticket_name == $table[$j]->ticket_name){
                     if(isset($table[$i]->type_name) && isset($table[$j]->type_name)){
                         $table[$i]->type_name = array(0=>$table[$i]->type_name,1=>$table[$j]->type_name);
                         $table[$i]->type_money = array(0=>$table[$i]->type_money,1=>$table[$j]->type_money);
                         $table[$j]->id=0;
-                        unset($table[$j]);
-                        //$recordnum--;
+                        //unset($table[$j]);
+                        ++$i;
                         break;
                     }
                 }
-            }
+            } */
         }
+        dump($table);
+
 
         return view("index_ticket",compact('table'));
     }
