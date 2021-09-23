@@ -38,14 +38,14 @@
                     @foreach($tabletitles as $index)
                         <td class="titletd">{{ $index }}</td>
                     @endforeach
-                    <?php dump($table) ?>
                     @foreach($table as $index)
-                    @if($index->id!==0)
+                    <?php dump($table); ?>
+                    @if($index->id !== 0)
                     <tr>
                         <td class="itemtd">{{ $index->biz_id }}</td>
                         <td class="itemtd">{{ $index->ticket_code }}</td>
                         <td class="itemtd">{{ $index->ticket_name }}</td>
-                        @if(isset($index->type_name[1]))
+                        @if(isset($index->type_money[1]))
                             <td class="itemtd">{{ $index->type_name[0]}}：{{ $index->type_money[0] }}円<br>
                                                 {{ $index->type_name[1]}}：{{ $index->type_money[1] }}円</td>
                         @else
