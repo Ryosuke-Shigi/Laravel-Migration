@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Collection;
+
 use App\Models\table01;
 use App\Models\table03;
 use App\Models\table04;
@@ -17,8 +19,29 @@ class TicketController extends Controller
     //一覧表示
     public function index(Request $request){
         $table=DB::table('tables05')
-        ->leftjoin('tables01','tables01.ticket_code','=','tables05.ticket_code')    //table05のチケット名を基準に
-        ->paginate(10);
+        ->join('tables01','tables01.ticket_code','=','tables05.ticket_code')
+        ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
+        ;    //table05のチケット名を基準に
+        //レコード件数取得
+        $recordnum=$table->count();
+
+        $table=$table->paginate(10);//paginateはページ切り替え時の度にここを通るようです
+
+        for($i=0;$i<$recordnum-1;$i++){
+            for($j=$i+1;$j<$recordnum;$j++){
+                if($table[$i]!=NULL && $table[$j]!=NULL&& $table[$i]->ticket_name == $table[$j]->ticket_name){
+                    if(isset($table[$i]->type_name) && isset($table[$j]->type_name)){
+                        $table[$i]->type_name = array(0=>$table[$i]->type_name,1=>$table[$j]->type_name);
+                        $table[$i]->type_money = array(0=>$table[$i]->type_money,1=>$table[$j]->type_money);
+                        $table[$j]->id=0;
+                        unset($table[$j]);
+                        //$recordnum--;
+                        break;
+                    }
+                }
+            }
+        }
+
         return view("index_ticket",compact('table'));
     }
 

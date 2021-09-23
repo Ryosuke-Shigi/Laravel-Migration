@@ -38,21 +38,29 @@
                     @foreach($tabletitles as $index)
                         <td class="titletd">{{ $index }}</td>
                     @endforeach
+                    <?php dump($table) ?>
                     @foreach($table as $index)
+                    @if($index->id!==0)
                     <tr>
                         <td class="itemtd">{{ $index->biz_id }}</td>
                         <td class="itemtd">{{ $index->ticket_code }}</td>
                         <td class="itemtd">{{ $index->ticket_name }}</td>
-                        <td class="itemtd">{{ $index->type_name."：".$index->type_money."円" }}</td>
-                        <td class="itemtd"><button type="submit" foraction="{{ 'updata/'.$index->id }}"">編集</button></td>
+                        @if(isset($index->type_name[1]))
+                            <td class="itemtd">{{ $index->type_name[0]}}：{{ $index->type_money[0] }}円<br>
+                                                {{ $index->type_name[1]}}：{{ $index->type_money[1] }}円</td>
+                        @else
+                            <td class="itemtd">{{ $index->type_name}}：{{ $index->type_money }}円<br>
+                        @endif
+                        <td class="itemtd"><button type="submit" foraction="{{ 'updata/'.$index->id }}">編集</button></td>
                         <td class="itemtd"><button type="submit" foraction="{{ 'delete/'.$index->id }}">削除</button></td>
                     </tr>
+                    @endif
                     @endforeach
                 </form>
             </table>
         </div>
         <div class="listpage">
-            {{ $table->links() }}
+        {{ $table->links() }}
         </div>
     </div>
 </div>

@@ -24,18 +24,18 @@
         <div class="itemname_line">概要</div>
         <div class="itemsector"><input class="textbox" type="text" id="overview" name="overview"></div>
         <div class="itemname_line">画像</div>
-        <div class="itemsector"><input class="textbox" type="text" id="overview_image" name="overview_image"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_overview" onchange="overview_select(this)"></div>
+        <div class="itemsector"><input disabled class="textbox" type="text" id="overview_image" name="overview_image"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_overview" onchange="overview_select(this)"></div>
 
 
     <div class="contenttitle">詳細</div>
         <div class="itemname_line">紹介</div>
-        <div class="itemsector"><input class="textbox" type="text" id="introduction" name="introduction"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_intro" onchange="intro_select(this)"></div>
+        <div class="itemsector"><input disabled class="textbox" type="text" id="introduction" name="introduction"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_intro" onchange="intro_select(this)"></div>
         <div class="itemname_line">重要注意事項</div>
         <div class="itemsector"><input class="textbox" type="text" id="important_notes" name="important_notes"></div>
         <div class="itemname_line">チケット紹介</div>
         <div class="itemsector"><input class="textbox" type="text" id="contents_data" name="contents_data"></div>
         <div class="itemname_line">紹介画像</div>
-        <div class="itemsector"><input class="textbox" type="text" id="contents_image" name="contents_image"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_intro" onchange="contents_select(this)"></div>
+        <div class="itemsector"><input disabled class="textbox" type="text" id="contents_image" name="contents_image"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_intro" onchange="contents_select(this)"></div>
         <div class="itemname_line">注意事項</div>
         <div class="itemsector"><input class="textbox" type="text" id="detail_notes" name="detail_notes"></div>
         <div class="itemname_line">お問合せ</div>
@@ -88,7 +88,7 @@
     <div class="itemname_line">内容・注意事項</div>
     <div class="itemsector"><input class="textbox" type="text" id="svc_cautions01" name="service_content01"></div>
     <div class="itemname_line"></div>
-    <div class="itemsector"><input class="textbox" type="text" id="svc_cautions02" name="service_content02"></div><div class="buttonsector"><input type="file" class="filebtn" id="svc_file" onchange="svc_select(this)"></div>
+    <div class="itemsector"><input disabled class="textbox" type="text" id="svc_cautions02" name="service_content02"></div><div class="buttonsector"><input type="file" class="filebtn" id="svc_file" onchange="svc_select(this)"></div>
     <div class="itemname_multi">サービス種類</div>
         <input type="radio" name="svc_type" id="svc_type01" value="1"><label for="svc_type01">サービス１</label>
         <input type="radio" name="svc_type" id="svc_type02" value="2"><label for="svc_type02">サービス２</label>
