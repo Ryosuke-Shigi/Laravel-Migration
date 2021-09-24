@@ -21,9 +21,9 @@ class TicketController extends Controller
         $table=DB::table('tables05')
         ->join('tables01','tables01.ticket_code','=','tables05.ticket_code')
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
-        ->orderBy('ticket_code')->orderBy('ticket_name');    //table05のチケット名を基準に
+        ->orderBy('ticket_name')->orderBy('ticket_code');    //ソート大事　とても大事
         //レコード件数取得
-        $recordnum=5;
+        $recordnum=4;
         $table=$table->paginate($recordnum);//paginateはページ切り替え時の度にここを通るようです
 
         //同一チケット名で、金額が複数種類入力されている場合　ひとつにまとめて一方を消す
@@ -41,7 +41,7 @@ class TicketController extends Controller
                             array_push($name,$table[$j]->type_name);
                             array_push($money,$table[$j]->type_money);
                             $table[$j]->id=0; //idを０にしてbladeで表示しないようにしている　削除できたらしたい
-                            //unset($table[$j]);//インデックス情報は変わらないのを逆手にとってどうにかできないかなと思っている
+                            unset($table[$j]);//インデックス情報は変わらないのを逆手にとってどうにかできないかなと思っている
                             $samename+=1;
                         }
                     }else{
