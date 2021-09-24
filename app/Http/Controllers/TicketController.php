@@ -21,34 +21,50 @@ class TicketController extends Controller
         $table=DB::table('tables05')
         ->join('tables01','tables01.ticket_code','=','tables05.ticket_code')
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
-        ;    //table05のチケット名を基準に
+        ->orderBy('ticket_code')->orderBy('ticket_name');    //table05のチケット名を基準に
         //レコード件数取得
-        $recordnum=6;
+        $recordnum=5;
         $table=$table->paginate($recordnum);//paginateはページ切り替え時の度にここを通るようです
 
-        //同一チケット名で、金額が２つ入力されている場合　ひとつにまとめて一方を消す
+        //同一チケット名で、金額が複数種類入力されている場合　ひとつにまとめて一方を消す
+        //一つずつ確認をとる
         for($i=0;$i<$recordnum-1;$i++){
-            if(isset($table[$i+1])){
-            if($table[$i]->ticket_name == $table[$i+1]->ticket_name){
-                $table[$i]->type_name = array(0=>$table[$i]->type_name,1=>$table[$i+1]->type_name);
-                $table[$i]->type_money = array(0=>$table[$i]->type_money,1=>$table[$i+1]->type_money);
-                $table[$i+1]->id=0;
-                //unset($table[$i+1]);
-                $i+=1;
-            }
-            }
-            /* for($j=$i+1;$j<$recordnum;$j++){
-                if(isset($table[$j]) && $table[$i]->ticket_name == $table[$j]->ticket_name){
-                    if(isset($table[$i]->type_name) && isset($table[$j]->type_name)){
-                        $table[$i]->type_name = array(0=>$table[$i]->type_name,1=>$table[$j]->type_name);
-                        $table[$i]->type_money = array(0=>$table[$i]->type_money,1=>$table[$j]->type_money);
-                        $table[$j]->id=0;
-                        //unset($table[$j]);
-                        ++$i;
+            if(isset($table[$i])){
+                $samename=0;    //同名件数
+                $name = array($table[$i]->type_name);
+                $money = array($table[$i]->type_money);
+    /*             $table[$i]->type_name=array($table[$i]->type_name);
+                $table[$i]->type_money=array($table[$i]->type_money); */
+                for($j=$i+1;$j<$recordnum;$j++){
+                    if(isset($table[$j]->ticket_name)){
+                        if($table[$i]->ticket_name == $table[$j]->ticket_name){
+                            array_push($name,$table[$j]->type_name);
+                            array_push($money,$table[$j]->type_money);
+                            $table[$j]->id=0; //idを０にしてbladeで表示しないようにしている　削除できたらしたい
+                            //unset($table[$j]);//インデックス情報は変わらないのを逆手にとってどうにかできないかなと思っている
+                            $samename+=1;
+                        }
+                    }else{
                         break;
                     }
+                    if($samename!=0){
+                        $table[$i]->type_name=$name;
+                        $table[$i]->type_money=$money;
+                    }
                 }
-            } */
+                $i+=$samename;
+    /*             if(isset($table[$i+1])){
+                    if($table[$i]->ticket_name == $table[$i+1]->ticket_name){
+                        $table[$i]->type_name = array(0=>$table[$i]->type_name,1=>$table[$i+1]->type_name);
+                        $table[$i]->type_money = array(0=>$table[$i]->type_money,1=>$table[$i+1]->type_money);
+                        $table[$i+1]->id=0;
+                        //unset($table[$i+1]);
+                        $i+=1;
+                    }
+                } */
+            }else{
+                break;
+            }
         }
         dump($table);
 
@@ -62,7 +78,7 @@ class TicketController extends Controller
     }
     //削除画面
     public function delete($id){
-        dump($id);
+        //dump($id);
         return redirect('index3');
     }
 
@@ -219,7 +235,7 @@ class TicketController extends Controller
                 $tables05->type_id=1;                           //券種ID
                 $tables05->type_name=$request->type_name01;     //単価名称
                 $tables05->cancel_rate=$request->cancel_rate01; //キャンセル料単価
-                $tables05->type_money=$request->cancel_rate01;  //キャンセル料（計算後が入る？
+                $tables05->type_money=$request->type_money01;  //単価！
                 //tables05に値を入れる
                 $tables05->save();
                 $tables05 = new table05;
@@ -237,7 +253,7 @@ class TicketController extends Controller
                 $tables05->type_id=2;                           //券種ID
                 $tables05->type_name=$request->type_name02;     //単価名称
                 $tables05->cancel_rate=$request->cancel_rate02; //キャンセル料単価
-                $tables05->type_money=$request->cancel_rate02;  //キャンセル料（計算後の値がなにか入る？）
+                $tables05->type_money=$request->type_money02;  //単価！
                 //tables05に値を入れる
                 $tables05->save();
             }

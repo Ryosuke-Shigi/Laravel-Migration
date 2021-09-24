@@ -39,18 +39,34 @@
                         <td class="titletd">{{ $index }}</td>
                     @endforeach
                     @foreach($table as $index)
-                    <?php dump($table); ?>
                     @if($index->id !== 0)
                     <tr>
                         <td class="itemtd">{{ $index->biz_id }}</td>
                         <td class="itemtd">{{ $index->ticket_code }}</td>
                         <td class="itemtd">{{ $index->ticket_name }}</td>
-                        @if(isset($index->type_money[1]))
+
+                        <!-- $loop->index ループ中のインデックス情報を取得することができる  -->
+                        <td class="itemtd">
+                            @if(isset($index->type_money[1]))
+                                @foreach($index->type_name as $type)
+                                    {{ $index->type_name[$loop->index] }}:{{ $index->type_money[$loop->index] }}円<br>
+                                @endforeach
+                            @else
+                                {{ $index->type_name}}：{{ $index->type_money }}円
+                            @endif
+                        </td>
+
+{{--
+
+{{--                         @if(isset($index->type_money[1]) && isset($index->type_name[1]))
                             <td class="itemtd">{{ $index->type_name[0]}}：{{ $index->type_money[0] }}円<br>
                                                 {{ $index->type_name[1]}}：{{ $index->type_money[1] }}円</td>
                         @else
                             <td class="itemtd">{{ $index->type_name}}：{{ $index->type_money }}円<br>
-                        @endif
+                        @endif --}}
+
+
+
                         <td class="itemtd"><button type="submit" foraction="{{ 'updata/'.$index->id }}">編集</button></td>
                         <td class="itemtd"><button type="submit" foraction="{{ 'delete/'.$index->id }}">削除</button></td>
                     </tr>
