@@ -20,12 +20,12 @@ class TicketController extends Controller
     //一覧表示
     public function index(Request $request){
 
-        //viewへ送るデータ（ここへticket_nameとticket_codeを追加していきます）
+         //viewへ送るデータ（ここへticket_nameとticket_codeを追加していきます）
          $table=DB::table('tables01')
         ->join('tables05','tables01.id','=','tables05.id')
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
         ->orderBy('ticket_code')->orderBy('ticket_name')
-        ->paginate(3);
+        ->paginate(1);
         //複数のticket_nameとticket_code対応用テーブル
         $table05=DB::table('tables01')
         ->join('tables05','tables01.ticket_code','=','tables05.ticket_code')
@@ -38,16 +38,14 @@ class TicketController extends Controller
 
 
         foreach($table as $index){
-            $name=array($index->type_name);
-            $money=array($index->type_money);
+            $name=array();
+            $money=array();
             foreach($table05 as $values){
-                    if(($index != $values
-                        && $index->ticket_code == $values->ticket_code
+                    if(($index->ticket_code == $values->ticket_code
                         && $index->ticket_name == $values->ticket_name)){
                         array_push($name,$values->type_name);
                         array_push($money,$values->type_money);
                     }
-                //dump("インデックス".$index->ticket_code.":".$values->ticket_code);
             }
             $index->type_name=$name;
             $index->type_money=$money;
