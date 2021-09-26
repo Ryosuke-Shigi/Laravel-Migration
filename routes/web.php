@@ -62,8 +62,8 @@ Route::post("index","TicketController@index");
 Route::get("create","TicketController@create");
 Route::post("create","TicketController@create");
 //削除
-Route::get("delete/{id?}","TicketController@delete");
-Route::post("delete/{id?}","TicketController@delete");
+Route::get('delete/{ticket_code?}/{ticket_name?}',"TicketController@delete");
+Route::post('delete/{ticket_code?}/{ticket_name?}',"TicketController@delete");
 //登録
 Route::get("store","TicketController@store");
 Route::post("store","TicketController@store");

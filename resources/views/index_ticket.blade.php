@@ -32,7 +32,7 @@
         </div>
         <div class="listfield">
             <table class = "tableitem">
-                <form method="POST" enctype= "multipart/form-data"> <!-- indexは仮 -->
+                <form action="index3" method="POST" enctype= "multipart/form-data"> <!-- indexは仮 -->
                 @csrf
                     <tr class = "titletr">
                     @foreach($tabletitles as $index)
@@ -47,16 +47,10 @@
 
                         <!-- $loop->index ループ中のインデックス情報を取得することができる  -->
                         <td class="itemtd">
-                            @if(isset($index->type_money[1]))
                                 @foreach($index->type_name as $type)
                                     {{ $index->type_name[$loop->index] }}:{{ $index->type_money[$loop->index] }}円<br>
                                 @endforeach
-                            @else
-                                {{ $index->type_name}}：{{ $index->type_money }}円
-                            @endif
                         </td>
-
-{{--
 
 {{--                         @if(isset($index->type_money[1]) && isset($index->type_name[1]))
                             <td class="itemtd">{{ $index->type_name[0]}}：{{ $index->type_money[0] }}円<br>
@@ -66,9 +60,8 @@
                         @endif --}}
 
 
-
-                        <td class="itemtd"><button type="submit" foraction="{{ 'updata/'.$index->id }}">編集</button></td>
-                        <td class="itemtd"><button type="submit" foraction="{{ 'delete/'.$index->id }}">削除</button></td>
+                        <td class="itemtd"><button type="submit" formaction="updata/{{$index->biz_id}}">編集</button></td>
+                        <td class="itemtd"><button type="submit" formaction="delete/{{$index->ticket_code}}/{{$index->ticket_name}}">削除</button></td>
                     </tr>
                     @endif
                     @endforeach
