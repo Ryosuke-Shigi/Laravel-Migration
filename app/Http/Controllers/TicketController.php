@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Collection;
 
+
 use App\Models\table01;
 use App\Models\table03;
 use App\Models\table04;
@@ -18,26 +19,53 @@ class TicketController extends Controller
 {
     //一覧表示
     public function index(Request $request){
-        $table=DB::table('tables05')
-        ->join('tables01','tables01.ticket_code','=','tables05.ticket_code')
+
+        //viewへ送るデータ（ここへticket_nameとticket_codeを追加していきます）
+         $table=DB::table('tables01')
+        ->join('tables05','tables01.id','=','tables05.id')
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
-        ->orderBy('ticket_name')->orderBy('ticket_code');    //ソート大事　とても大事
-        //レコード件数取得
-        $recordnum=4;
-        $table=$table->paginate($recordnum);//paginateはページ切り替え時の度にここを通るようです
+        ->orderBy('ticket_code')->orderBy('ticket_name')
+        ->paginate(3);
+        //複数のticket_nameとticket_code対応用テーブル
+        $table05=DB::table('tables01')
+        ->join('tables05','tables01.ticket_code','=','tables05.ticket_code')
+        ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
+        ->orderBy('ticket_name')->orderBy('ticket_code')//ソート大事　とても大事
+        ->get();
 
         //同一チケット名で、金額が複数種類入力されている場合　ひとつにまとめて一方を消す
         //一つずつ確認をとる
-        for($i=0;$i<$recordnum-1;$i++){
+
+
+        foreach($table as $index){
+            $name=array($index->type_name);
+            $money=array($index->type_money);
+            foreach($table05 as $values){
+                    if(($index != $values
+                        && $index->ticket_code == $values->ticket_code
+                        && $index->ticket_name == $values->ticket_name)){
+                        array_push($name,$values->type_name);
+                        array_push($money,$values->type_money);
+                    }
+                //dump("インデックス".$index->ticket_code.":".$values->ticket_code);
+            }
+            $index->type_name=$name;
+            $index->type_money=$money;
+        }
+
+/*
+
+
+        $recordnum=10;
+        for($i=0;$i<$table->count()-1;$i++){
             if(isset($table[$i])){
                 $samename=0;    //同名件数
                 $name = array($table[$i]->type_name);
                 $money = array($table[$i]->type_money);
-    /*             $table[$i]->type_name=array($table[$i]->type_name);
-                $table[$i]->type_money=array($table[$i]->type_money); */
                 for($j=$i+1;$j<$recordnum;$j++){
                     if(isset($table[$j]->ticket_name)){
-                        if($table[$i]->ticket_name == $table[$j]->ticket_name){
+                        if(($table[$i]->ticket_code == $table[$j]->ticket_code)
+                            && ($table[$i]->ticket_name == $table[$j]->ticket_name)){
                             array_push($name,$table[$j]->type_name);
                             array_push($money,$table[$j]->type_money);
                             $table[$j]->id=0; //idを０にしてbladeで表示しないようにしている　削除できたらしたい
@@ -53,32 +81,28 @@ class TicketController extends Controller
                     }
                 }
                 $i+=$samename;
-    /*             if(isset($table[$i+1])){
-                    if($table[$i]->ticket_name == $table[$i+1]->ticket_name){
-                        $table[$i]->type_name = array(0=>$table[$i]->type_name,1=>$table[$i+1]->type_name);
-                        $table[$i]->type_money = array(0=>$table[$i]->type_money,1=>$table[$i+1]->type_money);
-                        $table[$i+1]->id=0;
-                        //unset($table[$i+1]);
-                        $i+=1;
-                    }
-                } */
             }else{
                 break;
             }
-        }
-        dump($table);
-
+        } */
 
         return view("index_ticket",compact('table'));
     }
+
+
 
     //登録画面
     public function store(){
         return view("create_ticket");
     }
-    //削除画面
-    public function delete($id){
-        //dump($id);
+
+
+
+    //削除
+    public function delete($ticket_code,$ticket_name){
+/*         dump($ticket_code);
+        dump($ticket_name); */
+
         return redirect('index3');
     }
 
@@ -188,7 +212,7 @@ class TicketController extends Controller
 
                 $tables04->cautions_type=1;
                 $tables04->cautions_text=$request->important_notes;
-                $tables04->save();
+                $tables04->save();          //saveしてから
                 $tables04 = new table04;    //newしなおさないと　オートIDが更新されない！
             }
             //詳細：注意事項
