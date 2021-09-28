@@ -49,8 +49,31 @@
         <div class="itemname_line">キャンセル料<br>発生期限（分）</div>
         <div class="itemsector"><input class="textbox" type="text" id="cancel_limit" name="cancel_limit"></div>
         <div class="itemname_line">料金</div>
-        <div class="price_section">
+
+
+
+
+
+        <div class="price_section" id="inputarea">
             <div class="item_section">
+                <div class="item_name">名称</div>
+                <input class="item_text" type="text" id="type_name01" name="type_name[]">
+            </div>
+            <div class="item_section">
+                <div class="item_name">単価</div>
+                <input class="item_text" type="text" id="type_money01" name="type_money[]">
+            </div>
+            <div class="item_section">
+                <div class="item_name">キャンセル料</div>
+                <input class="item_text" type="text" id="cancel_rate01" name="cancel_rate[]">
+            </div>
+
+            <button type="button" class="addbtn" id="itemadd">追加</button>
+        </div>
+
+
+
+{{--             <div class="item_section">
                 <div class="item_name">名称１</div>
                 <input class="item_text" type="text" id="type_name01" name="type_name01">
             </div>
@@ -61,7 +84,12 @@
             <div class="item_section">
                 <div class="item_name">キャンセル料１</div>
                 <input class="item_text" type="text" id="cancel_rate01" name="cancel_rate01">
-            </div>
+            </div> --}}
+
+
+
+
+ {{--        <div class="price_section">
             <div class="item_section">
                 <div class="item_name">名称２</div>
                 <input class="item_text" type="text" id="type_name02" name="type_name02">
@@ -74,7 +102,11 @@
                 <div class="item_name">キャンセル料２</div>
                 <input class="item_text" type="text" id="cancel_rate02" name="cancel_rate02">
             </div>
-        </div>
+        </div> --}}
+
+
+
+
         <div class="itemname_line">注意事項</div>
         <div class="itemsector"><input class="textbox" type="text" id="item_notes" name="item_notes"></div>
 
@@ -101,11 +133,27 @@
 </div>
 </form>
 
+
+
+<script src="{{ mix('js/jquery.js') }}"></script>
+
+
+
 @endsection
 
 <script>
+    //追加ボタンを押したとき
+/*     function addclick(){
+
+    } */
+
+
     //各ボタンのボタン要素を取得
     //概要のファイル
+    //
+    //  ファイルを選択すると　ファイル名がテキストに表示される
+    //
+    //
     function overview_select(obj){
         document.getElementById('overview_image').value=obj.value;
     }
@@ -122,9 +170,18 @@
         document.getElementById('svc_cautions02').value=obj.value;
     }
 
-
-
-
-
+/*        <div class="item_section">
+                <div class="item_name">名称１</div>
+                <input class="item_text" type="text" id="type_name01" name="type_name01">
+            </div>
+            <div class="item_section">
+                <div class="item_name">単価１</div>
+                <input class="item_text" type="text" id="type_money01" name="type_money01">
+            </div>
+            <div class="item_section">
+                <div class="item_name">キャンセル料１</div>
+                <input class="item_text" type="text" id="cancel_rate01" name="cancel_rate01">
+            </div>
+            "); */
 
 </script>

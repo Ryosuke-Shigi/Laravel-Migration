@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 
-use Illuminate\Support\Collection;
 
 
 use App\Models\table01;
@@ -26,7 +25,7 @@ class TicketController extends Controller
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
         ->orderBy('ticket_code')->orderBy('ticket_name')
         ->paginate(1);
-        //複数のticket_nameとticket_code対応用テーブル
+        //ticket_name ticket_name 同じものを検索用
         $table05=DB::table('tables01')
         ->join('tables05','tables01.ticket_code','=','tables05.ticket_code')
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
@@ -35,8 +34,6 @@ class TicketController extends Controller
 
         //同一チケット名で、金額が複数種類入力されている場合　ひとつにまとめて一方を消す
         //一つずつ確認をとる
-
-
         foreach($table as $index){
             $name=array();
             $money=array();
@@ -107,6 +104,7 @@ class TicketController extends Controller
     //登録作業
     public function create(Request $request){
 
+        dump($request);
         //モデルをインスタンス化
         $tables01 = new table01;
         $tables03 = new table03;
@@ -246,6 +244,28 @@ class TicketController extends Controller
 
             //tables05処理
             //券種ID１
+            if(isset($request->type_money)){
+                foreach($request->type_money as $index=>$values){
+                    //事業者ID
+                    $tables05->biz_id=1;
+                    //商品番号
+                    $tables05->ticket_code=$request->ticket_code;
+                    //キャンセル区分
+                    $tables05->cancel_type=1;
+
+                    $tables05->type_id=$index+1;                            //券種ID
+                    $tables05->type_name=$request->type_name[$index];       //単価名称
+                    $tables05->cancel_rate=$request->cancel_rate[$index];   //キャンセル料単価
+                    $tables05->type_money=$request->type_money[$index];     //単価！
+                    //tables05に値を入れる
+                    $tables05->save();
+                    $tables05 = new table05;
+                }
+            }
+
+
+
+/*             //券種ID１
             if(isset($request->type_money01)){
                 //事業者ID
                 $tables05->biz_id=1;
@@ -278,7 +298,12 @@ class TicketController extends Controller
                 $tables05->type_money=$request->type_money02;  //単価！
                 //tables05に値を入れる
                 $tables05->save();
-            }
+            } */
+
+
+
+
+
 
             //tables06の処理
             //事業者ID
@@ -309,6 +334,8 @@ class TicketController extends Controller
             DB::RollBack();             //処理を戻す
                 throw $exception;           //例外を投げる（例外を知らせる）例外メッセージの取得はExceptionのgetMessage();
         }
+
+
         return redirect('index3');
     }
 
