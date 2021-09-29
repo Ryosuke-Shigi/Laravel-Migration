@@ -23,15 +23,15 @@ class TicketController extends Controller
          $table=DB::table('tables01')
         ->join('tables05','tables01.id','=','tables05.id')
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
-        ->orderBy('ticket_code')->orderBy('ticket_name')
-        ->paginate(1);
+        //->orderBy('ticket_code')->orderBy('ticket_name')
+        ->paginate(2);
         //ticket_name ticket_name 同じものを検索用
         $table05=DB::table('tables01')
         ->join('tables05','tables01.ticket_code','=','tables05.ticket_code')
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
-        ->orderBy('ticket_name')->orderBy('ticket_code')//ソート大事　とても大事
+        //->orderBy('ticket_name')->orderBy('ticket_code')//ソート大事　とても大事
         ->get();
-
+        dump($table);
         //同一チケット名で、金額が複数種類入力されている場合　ひとつにまとめて一方を消す
         //一つずつ確認をとる
         foreach($table as $index){
@@ -48,38 +48,6 @@ class TicketController extends Controller
             $index->type_money=$money;
         }
 
-/*
-
-
-        $recordnum=10;
-        for($i=0;$i<$table->count()-1;$i++){
-            if(isset($table[$i])){
-                $samename=0;    //同名件数
-                $name = array($table[$i]->type_name);
-                $money = array($table[$i]->type_money);
-                for($j=$i+1;$j<$recordnum;$j++){
-                    if(isset($table[$j]->ticket_name)){
-                        if(($table[$i]->ticket_code == $table[$j]->ticket_code)
-                            && ($table[$i]->ticket_name == $table[$j]->ticket_name)){
-                            array_push($name,$table[$j]->type_name);
-                            array_push($money,$table[$j]->type_money);
-                            $table[$j]->id=0; //idを０にしてbladeで表示しないようにしている　削除できたらしたい
-                            unset($table[$j]);//インデックス情報は変わらないのを逆手にとってどうにかできないかなと思っている
-                            $samename+=1;
-                        }
-                    }else{
-                        break;
-                    }
-                    if($samename!=0){
-                        $table[$i]->type_name=$name;
-                        $table[$i]->type_money=$money;
-                    }
-                }
-                $i+=$samename;
-            }else{
-                break;
-            }
-        } */
 
         return view("index_ticket",compact('table'));
     }
@@ -262,45 +230,6 @@ class TicketController extends Controller
                     $tables05 = new table05;
                 }
             }
-
-
-
-/*             //券種ID１
-            if(isset($request->type_money01)){
-                //事業者ID
-                $tables05->biz_id=1;
-                //商品番号
-                $tables05->ticket_code=$request->ticket_code;
-                //キャンセル区分
-                $tables05->cancel_type=1;
-
-                $tables05->type_id=1;                           //券種ID
-                $tables05->type_name=$request->type_name01;     //単価名称
-                $tables05->cancel_rate=$request->cancel_rate01; //キャンセル料単価
-                $tables05->type_money=$request->type_money01;  //単価！
-                //tables05に値を入れる
-                $tables05->save();
-                $tables05 = new table05;
-            }
-            //券種ID２
-            if(isset($request->type_money02)){
-                //$tables05->create();
-                //事業者ID
-                $tables05->biz_id=1;
-                //商品番号
-                $tables05->ticket_code=$request->ticket_code;
-                //キャンセル区分
-                $tables05->cancel_type=1;
-
-                $tables05->type_id=2;                           //券種ID
-                $tables05->type_name=$request->type_name02;     //単価名称
-                $tables05->cancel_rate=$request->cancel_rate02; //キャンセル料単価
-                $tables05->type_money=$request->type_money02;  //単価！
-                //tables05に値を入れる
-                $tables05->save();
-            } */
-
-
 
 
 
