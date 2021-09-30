@@ -71,3 +71,9 @@ Route::post("store","TicketController@store");
 //table3一覧表示
 Route::get("index3","TicketController@index3");
 Route::get("index3","TicketController@index3");
+
+
+//ログイン　追加
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

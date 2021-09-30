@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 
+//ログイン・ログアウト
+use Auth;
 
 
 use App\Models\table01;
@@ -47,6 +49,12 @@ class TicketController extends Controller
             $index->type_name=$name;
             $index->type_money=$money;
         }
+
+
+
+        //一覧表示したらログアウトさせる
+        Auth::logout();
+
 
 
         return view("index_ticket",compact('table'));
