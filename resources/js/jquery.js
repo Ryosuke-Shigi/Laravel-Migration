@@ -1,4 +1,4 @@
-
+//ボタンを増やす処理　ID=itemaddがクリックされたらinputareaへ下の文を追加していく
 $(function () {
     $('#itemadd').on('click', function() {
         $('#inputarea').append(

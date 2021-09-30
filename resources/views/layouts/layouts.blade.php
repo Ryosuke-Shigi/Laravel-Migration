@@ -9,6 +9,7 @@
             @yield('content')
         </div>
 
-         <script src="{{ asset('js/app.js') }}"></script>   <!--js/app.jsを読み込む-->
+
     </body>
+
 </html>

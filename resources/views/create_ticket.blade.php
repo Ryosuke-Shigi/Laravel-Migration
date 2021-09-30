@@ -6,11 +6,12 @@
 
 @section('style')
 {{asset("css/create_ticket_style.css")}}
+
 @endsection
 
 <!--メインコンテンツ-->
 @section('contents')
-
+<script src="{{ asset('js/app.js') }}" defar></script>   <!--js/app.jsを読み込む-->
 <form method="post" action="create" enctype="multipart/form-data">
 @csrf
 
@@ -104,9 +105,9 @@
 @endsection
 
 <!--HTML読込前にjavascript実行に入るとエラーが出る？？　deferを入れるとよい-->
-<script src="{{ mix('js/app.js') }}"></script>
 
-{{-- <script>
+
+<script>
     //追加ボタンを押したとき
 /*       function addclick(){
         alert('onore-');
@@ -133,4 +134,4 @@
     function svc_select(obj){
         document.getElementById('svc_cautions02').value=obj.value;
     }
-</script> --}}
+</script>

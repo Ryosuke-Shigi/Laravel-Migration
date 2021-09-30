@@ -1,5 +1,13 @@
 @extends('layouts.app')
 
+<!--
+
+
+    新規登録画面
+
+
+-->
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -46,7 +54,7 @@
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
 
                                 @error('password')
-                                    <span class="invalid-feedback" role="alert">
+                                    <span class="invalid-feedback" role="alert"><!--alertメッセージで伝える-->
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
