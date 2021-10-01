@@ -11,6 +11,7 @@ class PostController extends Controller
     *@param int $id
     *@return String
     */
+    //POST内のSHOWに
     public function show($post){
         return view("posts.show",compact("post"));  //$post は　/posts/:idから自動的に該当する投稿データを取得している
     }                                               //compact("post")でviewに変数を渡している

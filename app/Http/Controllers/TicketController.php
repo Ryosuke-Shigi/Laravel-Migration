@@ -33,7 +33,7 @@ class TicketController extends Controller
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
         //->orderBy('ticket_name')->orderBy('ticket_code')//ソート大事　とても大事
         ->get();
-        dump($table);
+
         //同一チケット名で、金額が複数種類入力されている場合　ひとつにまとめて一方を消す
         //一つずつ確認をとる
         foreach($table as $index){
@@ -61,6 +61,12 @@ class TicketController extends Controller
     }
 
 
+    /*
+    *
+    *   @param Request $request
+    *   @return Response
+    *
+    */
 
     //登録画面
     public function store(){
@@ -79,9 +85,18 @@ class TicketController extends Controller
 
     //登録作業
     public function create(Request $request){
+//バリデーションが完成したら　はずす
 
-        dump($request);
-        //モデルをインスタンス化
+        $this->validate($request,[
+            'ticket_name'=>'required',
+            'type_money.*'=>'required|integer'//配列ではname.*で
+        ],[
+            'ticket_name.required'=>'チケット名は必須です。',
+            'type_money.*.required'=>'価格が入力されていません。',
+            'type_money.*.integer'=>'数字で入力してください。'
+        ]);
+
+/*         //モデルをインスタンス化
         $tables01 = new table01;
         $tables03 = new table03;
         $tables04 = new table04;
@@ -271,7 +286,7 @@ class TicketController extends Controller
             DB::RollBack();             //処理を戻す
                 throw $exception;           //例外を投げる（例外を知らせる）例外メッセージの取得はExceptionのgetMessage();
         }
-
+ */
 
         return redirect('index3');
     }
