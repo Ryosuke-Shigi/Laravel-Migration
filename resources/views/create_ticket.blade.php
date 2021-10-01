@@ -23,12 +23,13 @@
         <div class="itemname_multi"><input type="checkbox" id="genre_code2" name="genre_code2"><label for="genre_code2">ジャンル小１</label></div>
         <div class="itemname_line">チケット名</div>
         <div class="itemsector"><input class="textbox" type="text" id="ticket_name" name="ticket_name"></div>
+        @if($errors->first('ticket_name')!=NULL)
+            <div class="errormsg">※ {{ $errors->first('ticket_name') }}</div>
+        @endif
         <div class="itemname_line">概要</div>
         <div class="itemsector"><input class="textbox" type="text" id="overview" name="overview"></div>
         <div class="itemname_line">画像</div>
         <div class="itemsector"><input disabled class="textbox" type="text" id="overview_image" name="overview_image"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_overview" onchange="overview_select(this)"></div>
-
-
     <div class="contenttitle">詳細</div>
         <div class="itemname_line">紹介</div>
         <div class="itemsector"><input disabled class="textbox" type="text" id="introduction" name="introduction"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_intro" onchange="intro_select(this)"></div>
@@ -71,7 +72,16 @@
 
             <button type="button" class="addbtn" id="itemadd">追加</button>
         </div>
-
+        @foreach($errors->get('type_money.*') as $key=>$message)
+            <!--〇〇番目の価格が入力されていません　など
+                substr($key,strrpos($key,".")+1)+1 最後から . までの文字をとる
+            -->
+            <div class="errormsg">{{substr($key,strrpos($key,".")+1)+1}}番目の{{  $errors->first($key) }}</div>
+                {{-- <div class="errormsg">※ {{$key}}{{  $loop->index }}番目の単価：{{ $errors->first('type_money.'.$loop->index)}}</div> --}}
+        @endforeach
+{{--         @if($errors->first('type_money.*') != NULL)
+            <div class="errormsg">※ {{ $errors->first('type_money.*') }}</div>
+        @endif --}}
 
 
 
