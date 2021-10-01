@@ -86,17 +86,22 @@ class TicketController extends Controller
     //登録作業
     public function create(Request $request){
 //バリデーションが完成したら　はずす
-
+        dump($request);
         $this->validate($request,[
             'ticket_name'=>'required',
-            'type_money.*'=>'required|integer'//配列ではname.*で
+            'type_money.*'=>'required|integer',//配列ではname.*で
+            'ticket_code'=>'required|string|max:5',
+            'cancel_limit'=>'integer'
         ],[
             'ticket_name.required'=>'チケット名は必須です。',
             'type_money.*.required'=>'価格が入力されていません。',
-            'type_money.*.integer'=>'数字で入力してください。'
+            'type_money.*.integer'=>'数字で入力してください。',
+            'ticket_code.max'=>'５文字以内で入力してください。',
+            'ticket_code.required'=>'商品番号は必須です',
+            'cancel_limit.integer'=>'数字を入力してください。'
         ]);
 
-/*         //モデルをインスタンス化
+        //モデルをインスタンス化
         $tables01 = new table01;
         $tables03 = new table03;
         $tables04 = new table04;
@@ -286,7 +291,7 @@ class TicketController extends Controller
             DB::RollBack();             //処理を戻す
                 throw $exception;           //例外を投げる（例外を知らせる）例外メッセージの取得はExceptionのgetMessage();
         }
- */
+
 
         return redirect('index3');
     }

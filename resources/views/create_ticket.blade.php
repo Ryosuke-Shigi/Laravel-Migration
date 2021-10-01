@@ -22,7 +22,7 @@
         <div class="itemname_line">ジャンル小</div>
         <div class="itemname_multi"><input type="checkbox" id="genre_code2" name="genre_code2"><label for="genre_code2">ジャンル小１</label></div>
         <div class="itemname_line">チケット名</div>
-        <div class="itemsector"><input class="textbox" type="text" id="ticket_name" name="ticket_name"></div>
+        <div class="itemsector"><input class="textbox" type="text" id="ticket_name" name="ticket_name" value="{{ old('ticket_name') }}"></div>
         @if($errors->first('ticket_name')!=NULL)
             <div class="errormsg">※ {{ $errors->first('ticket_name') }}</div>
         @endif
@@ -46,11 +46,17 @@
 
     <div class="contenttitle">商品設定</div>
         <div class="itemname_line">商品番号</div>
-        <div class="itemsector"><input class="textbox" type="text" id="ticket_code" name="ticket_code"></div>
+        <div class="itemsector"><input class="textbox" type="text" id="ticket_code" name="ticket_code" value="{{ old('ticket_code') }}"></div>
+        @if($errors->first('ticket_code')!=NULL)
+            <div class="errormsg">※ {{ $errors->first('ticket_code') }}</div>
+        @endif
         <div class="itemname_line">確認オプション</div>
         <div class="itemsector"><input type="checkbox" id="minors_flag" name="minors_flag"><label for="minors_flag">未成年フラグ</label></div>
         <div class="itemname_line">キャンセル料<br>発生期限（分）</div>
-        <div class="itemsector"><input class="textbox" type="text" id="cancel_limit" name="cancel_limit"></div>
+        <div class="itemsector"><input class="textbox" type="text" id="cancel_limit" name="cancel_limit" value = "{{ old('cancel_limit') }}"></div>
+        @if($errors->first('cancel_limit')!=NULL)
+            <div class="errormsg">※ {{ $errors->first('cancel_limit') }}</div>
+        @endif
         <div class="itemname_line">料金</div>
 
 
@@ -77,11 +83,7 @@
                 substr($key,strrpos($key,".")+1)+1 最後から . までの文字をとる
             -->
             <div class="errormsg">{{substr($key,strrpos($key,".")+1)+1}}番目の{{  $errors->first($key) }}</div>
-                {{-- <div class="errormsg">※ {{$key}}{{  $loop->index }}番目の単価：{{ $errors->first('type_money.'.$loop->index)}}</div> --}}
         @endforeach
-{{--         @if($errors->first('type_money.*') != NULL)
-            <div class="errormsg">※ {{ $errors->first('type_money.*') }}</div>
-        @endif --}}
 
 
 
