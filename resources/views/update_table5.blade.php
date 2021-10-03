@@ -9,14 +9,14 @@
 @endsection
 
 <!--コンテンツの表　タイトル-->
-<?php $tabletitles=array("type_name","type_money","cancel_rate"); ?>
+<?php $tabletitles=array("名称","単価","キャンセル料"); ?>
 
 <!--メインコンテンツ-->
 @section('contents')
 <div class="container">
     <div class="datatitle">
         事業ID：{{ $table[0]->biz_id}}　商品番号：{{ $table[0]->biz_id}}　チケットネーム：{{ $table[0]->ticket_name}}<br>
-        編集画面
+        『　編集画面　』
     </div>
     <div class="list">
         <table class = "tableitem">
@@ -34,6 +34,7 @@
                     <td class="itemtd"><input type="text" class="textbox" name="type_money[]" value={{ $record->type_money }}></td>
                     <td class="itemtd"><input type="text" class="textbox" name="cancel_rate[]" value={{ $record->cancel_rate }}></td>
                 </tr>
+
             @endforeach
         </table>
     </div>
