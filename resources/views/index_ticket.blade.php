@@ -24,20 +24,26 @@
             </form>
     </div>
     <div class="right">
+        <!-- 新規登録ボタン -->
         <div class="buttonsection">
             <form method="post" name="newregister" action="store" enctype="multipart/form-data">
                 @csrf
                 <button method="POST" type="submit" class="newcreatebtn">新規登録</button>
             </form>
         </div>
+
+        <!-- 表 -->
         <div class="listfield">
             <table class = "tableitem">
                 <form action="index3" method="POST" enctype= "multipart/form-data"> <!-- indexは仮 -->
                 @csrf
+                    <!-- 一覧表項目 -->
                     <tr class = "titletr">
                     @foreach($tabletitles as $index)
                         <td class="titletd">{{ $index }}</td>
                     @endforeach
+
+                    <!-- 表の中 -->
                     @foreach($table as $index)
                     @if($index->id !== 0)
                     <tr>
@@ -60,8 +66,10 @@
                         @endif --}}
 
 
-                        <td class="itemtd"><button type="submit" formaction="updata/{{$index->biz_id}}">編集</button></td>
+                        <td class="itemtd"><button type="submit" formaction="update_types/{{$index->ticket_code}}">編集</button></td>
                         <td class="itemtd"><button type="submit" formaction="delete/{{$index->ticket_code}}/{{$index->ticket_name}}">削除</button></td>
+
+
                     </tr>
                     @endif
                     @endforeach

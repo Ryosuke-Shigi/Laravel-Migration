@@ -68,9 +68,33 @@ class TicketController extends Controller
     *
     */
 
-    //登録画面
+    //登録画面表示
     public function store(){
         return view("create_ticket");
+    }
+
+    //編集作業
+    public function update(Request $request,$ticket_code){
+        foreach($request->type_id as $key=>$index){
+            $table=table05::find($request->id[$key]);
+            $table->type_name=$request->type_name[$key];
+            $table->type_money=$request->type_money[$key];
+            $table->cancel_rate=$request->cancel_rate[$key];
+            $table->save();
+        }
+        return redirect('index');
+    }
+
+    //編集画面表示
+    public function update_types($ticket_code){
+        $table=DB::table('tables05')
+        ->join('tables01','tables01.ticket_code','=','tables05.ticket_code')
+        ->where('tables05.ticket_code',$ticket_code)
+        ->select(['tables05.id','tables05.biz_id','tables05.ticket_code','tables01.ticket_name','tables05.type_id','tables05.type_name','tables05.type_money','tables05.cancel_rate'])
+        ->orderBy('tables05.type_id')
+        ->get();
+
+        return view("update_table5",compact('table'));
     }
 
 
