@@ -106,11 +106,23 @@ class TicketController extends Controller
 
         return redirect('index3');
     }
+    //削除
+    public function delete_ticket_code_name($ticket_code,$ticket_name){
+        //ticket_codeとticket_nameの二つをwhereでわけて、削除する
+        //table1からtable3,table5は関連付けされているので　一緒にその他データも削除される
+        $table=table01::where('ticket_code',$ticket_code)
+        ->where('ticket_name',$ticket_name)
+        ->first()->delete();
+
+        return redirect('index');
+    }
+
+
+
 
     //登録作業
     public function create(Request $request){
-//バリデーションが完成したら　はずす
-        dump($request);
+
         $this->validate($request,[
             'ticket_name'=>'required',
             'type_money.*'=>'required|integer',//配列ではname.*で

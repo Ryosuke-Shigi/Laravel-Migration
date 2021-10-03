@@ -105,3 +105,11 @@
     justify-content: center;
     background-color: aqua;
 }
+.errormsg{
+    height:40px;
+    width:100%;
+    font-size:25px;
+    color:red;
+    background-color: rgb(247, 194, 205);
+    text-align: center;
+}

@@ -64,6 +64,8 @@ Route::post("create","TicketController@create");
 //削除
 Route::get('delete/{ticket_code?}/{ticket_name?}',"TicketController@delete");
 Route::post('delete/{ticket_code?}/{ticket_name?}',"TicketController@delete");
+Route::get('delete_ticket_code_name/{ticket_code?}/{ticket_name?}',"TicketController@delete_ticket_code_name");
+Route::post('delete_ticket_code_name/{ticket_code?}/{ticket_name?}',"TicketController@delete_ticket_code_name");
 //編集
 Route::get('update/{ticket_code?}',"TicketController@update");
 Route::post('update/{ticket_code?}',"TicketController@update");
