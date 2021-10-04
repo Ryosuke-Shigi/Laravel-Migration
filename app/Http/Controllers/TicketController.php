@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 //ログイン・ログアウト
 use Auth;
@@ -16,8 +16,13 @@ use App\Models\table04;
 use App\Models\table05;
 use App\Models\table06;
 
+
 class TicketController extends Controller
 {
+    use SoftDeletes;
+
+
+
     //一覧表示
     public function index(Request $request){
 
