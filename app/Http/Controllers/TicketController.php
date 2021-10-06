@@ -28,16 +28,20 @@ class TicketController extends Controller
 
          //viewへ送るデータ（ここへticket_nameとticket_codeを追加していきます）
          $table=DB::table('tables01')
-        ->join('tables05','tables01.id','=','tables05.id')
+        ->join('tables05','tables01.ticket_code','=','tables05.ticket_code')
+        //->where('tables05.type_id',1)
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
         //->orderBy('ticket_code')->orderBy('ticket_name')
-        ->paginate(2);
+        ->where('tables05.type_id',1)
+        ->paginate(10);
+
         //ticket_name ticket_name 同じものを検索用
         $table05=DB::table('tables01')
         ->join('tables05','tables01.ticket_code','=','tables05.ticket_code')
         ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables05.type_name','tables05.type_money'])
         //->orderBy('ticket_name')->orderBy('ticket_code')//ソート大事　とても大事
         ->get();
+
 
         //同一チケット名で、金額が複数種類入力されている場合　ひとつにまとめて一方を消す
         //一つずつ確認をとる
@@ -55,12 +59,8 @@ class TicketController extends Controller
             $index->type_money=$money;
         }
 
-
-
         //一覧表示したらログアウトさせる
         Auth::logout();
-
-
 
         return view("index_ticket",compact('table'));
     }
@@ -80,6 +80,89 @@ class TicketController extends Controller
 
     //編集作業
     public function update(Request $request,$ticket_code){
+
+        //tables01更新
+        $table=table01::where('ticket_code',$ticket_code)
+        ->first();
+        dump($table);//findもしくはfirst　１レコードずつになる
+        //ジャンルコード
+        if(isset($request->genre_code1)){
+            $table->genre_code1=1;
+        }else{
+            $table->genre_code1=0;
+        }
+        if(isset($request->genre_code2)){
+            $table->genre_code2=1;
+        }else{
+            $table->genre_code2=0;
+        }
+        //チケットお問い合わせ
+        $table->ticket_remarks=$request->ticket_remarks;
+        //未成年フラグ
+        if(isset($request->minors_flag)){
+            $table->minors_flag=1;
+        }else{
+            $table->minors_flag=0;
+        }
+        //キャンセル料発生期限
+        $table->cancel_limit=$request->cancel_limit;
+        //チケット種類
+        $table->tickets_kind=$request->tickets_kind;
+        $table->save();
+
+        //tables03更新
+        if(isset($request->overview)){
+             $table=table03::where('ticket_code',$ticket_code)
+            ->where('contents_type',1)
+            ->first();
+            if($table != NULL){
+                $table->contents_data=$request->overview;
+                $table->save();
+            }
+        }
+        if(isset($request->contents_data)){
+            $table=table03::where('ticket_code',$ticket_code)
+           ->where('contents_type',2)
+           ->first();
+           if($table != NULL){
+                $table->contents_data=$request->contents_data;
+                $table->save();
+           }
+       }
+
+       //table04更新
+       if(isset($request->important_notes)){
+            $table=table04::where('ticket_code',$ticket_code)
+            ->where('cautions_type',1)
+            ->first();
+            if($table != NULL){
+                $table->cautions_text=$request->important_notes;
+                $table->save();
+            }
+        }
+        if(isset($request->detail_notes)){
+            $table=table04::where('ticket_code',$ticket_code)
+            ->where('cautions_type',2)
+            ->first();
+            if($table != NULL){
+                $table->cautions_text=$request->detail_notes;
+                $table->save();
+            }
+        }
+        if(isset($request->item_notes)){
+            $table=table04::where('ticket_code',$ticket_code)
+            ->where('cautions_type',3)
+            ->first();
+            if($table != NULL){
+                $table->cautions_text=$request->item_notes;
+                $table->save();
+            }
+        }
+
+        //table05更新
+        //$table->save();
+        //まだ途中　他のコード分を考えるため　
+        //名称：単価：キャンセル料はtype_idで１～並んでいるので、順番に当てはめていく
         foreach($request->type_id as $key=>$index){
             $table=table05::find($request->id[$key]);
             $table->type_name=$request->type_name[$key];
@@ -87,6 +170,25 @@ class TicketController extends Controller
             $table->cancel_rate=$request->cancel_rate[$key];
             $table->save();
         }
+
+        //table06更新
+        if(isset($request->svc_name)){
+            $table=table06::where('ticket_code',$ticket_code)
+            ->first();
+            if($table != NULL){
+                $table->svc_name=$request->svc_name;
+                $table->save();
+            }
+        }
+        if(isset($request->svc_type)){
+            $table=table06::where('ticket_code',$ticket_code)
+            ->first();
+            if($table != NULL){
+                $table->svc_type=$request->svc_type;
+                $table->save();
+            }
+        }
+
         return redirect('index');
     }
 
@@ -102,6 +204,33 @@ class TicketController extends Controller
         return view("update_table5",compact('table'));
     }
 
+
+
+
+
+
+    //固定部分以外すべて修正できる　画面を表示    //ticket_codeで対象をしぼります
+    public function update_all($ticket_code){
+
+        $table1=DB::table('tables01')
+        ->where('ticket_code','=',$ticket_code)
+        ->get();
+        $table3=DB::table('tables03')
+        ->where('ticket_code','=',$ticket_code)
+        ->get();
+        $table4=DB::table('tables04')
+        ->where('ticket_code','=',$ticket_code)
+        ->get();
+        $table5=DB::table('tables05')
+        ->where('ticket_code','=',$ticket_code)
+        ->get();
+        $table6=DB::table('tables06')
+        ->where('ticket_code','=',$ticket_code)
+        ->get();
+
+        return view("update_tables",compact('table1','table3','table4','table5','table6'));
+
+    }
 
 
     //削除

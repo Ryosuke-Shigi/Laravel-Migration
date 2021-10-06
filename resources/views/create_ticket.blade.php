@@ -82,7 +82,7 @@
             <!--〇〇番目の価格が入力されていません　など
                 substr($key,strrpos($key,".")+1)+1 最後から . までの文字をとる
             -->
-            <div class="errormsg">{{substr($key,strrpos($key,".")+1)+1}}番目の{{  $errors->first($key) }}</div>
+            <div class="errormsg">{{substr($key,strrpos($key,".")+1)+1}}番目：{{  $errors->first($key) }}</div>
         @endforeach
 
 
