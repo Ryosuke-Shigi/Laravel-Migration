@@ -1,12 +1,11 @@
 @charset "UTF-8";
 
 :root{
-    --item-line-height:40px;
+    --form-backcolor:rgba(255,255,255,0.5);
+    --item-line-height:50px;
     --itemname-fontsize:20px;
     --itemname-fontcolor:black;
     --itemname-background-color:white;
-
-    --form-backcolor:rgba(255,255,255,0.5);
   }
   /* リセット */
   body, h1,h2,h3,h4,h5,h6,p,ul,li,figure{
@@ -19,42 +18,83 @@
     font-size:15px;
     font-family:"Noto Sans Jp", sans-serif;
     box-sizing:border-box;  /*幅と高さに　padding borderを含める*/
-    overflow-y:scroll;
   }
 
-.wrapper{
+  .wrapper{
     width:100vw;
     height:auto;
     display:flex;
-    font-size:15px;
     background-color:rgba(120,120,120,120);
     justify-content:center;
-
+    align-items: flex-start;
 }
+
 
 .container{
-    width:900px;
+    width:800px;
     height:auto;
-    background-color:rgb(181, 236, 218);
+    background-color: bisque;
+
+}
+.container .datatitle{
+    width:100%;
+    height:150px;
     display:flex;
-    flex-wrap:wrap;
-    margin-top:30px;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(151, 219, 221);
+    text-align: center;
+    font-size:40px;
 }
 
-/*ERRORMESSAGE*/
-.container .errormsg{
+.container .list{
     width:100%;
-    height:20px;
-    color: red;
-    font-size:15px;
-    text-align: center;
-    font-weight: bold;
-    background-color: rgb(214, 171, 185);
+    height:auto;
+    background-color: RGBA(250,250,250,0.1);
+    display:flex;
+    flex-wrap: wrap;
 }
+
+/*名称・単価・キャンセル料用テーブル設定*/
+.tableitem{
+    display: flex;
+    justify-content: center;
+    width:100%;
+    background-color:coral;
+    border-collapse:collapse; /*枠の隙間を消す*/
+}
+.titletd{
+    border:solid 1px black;
+    width:15%;
+    height:20%;
+    font-size:15px;
+    font-weight: bold;
+    text-align: center;
+}
+.itemtd{
+    border:solid 1px black;
+    font-size:20px;
+    background-color:white;
+}
+.tableitem td{
+    height:30px;
+    text-align: center;
+}
+
+.buttonarea{
+    width: 100%;
+    height:40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: aqua;
+}
+
+
 
 /*各項目のタイトル（大）*/
-.container .contenttitle{
-    height:35px;
+.list .contenttitle{
+    height:50px;
     width:100%;
     display: flex;
     align-items: center;
@@ -64,7 +104,7 @@
 }
 
 /*複数行用タイトル*/
-.container .itemname_multi{
+.list .itemname_multi{
     height:var(--item-line-height);
     width:100%;
     font-size:15px;
@@ -72,9 +112,9 @@
     align-items: center;
 }
 /*１行用タイトル*/
-.container .itemname_line{
+.list .itemname_line{
     height:var(--item-line-height);
-    width:20%;
+    width:22%;
     font-size:15px;
     display:flex;
     align-items: center;
@@ -84,23 +124,24 @@
 
 
 /*項目入力フィールドを入れる*/
-.container .itemsector{
+.list .itemsector{
     height:var(--item-line-height);
-    width:61%;
+    width:58%;
     background-color:white;
     display:flex;
     align-items: center;
 }
 
-.container .buttonsector{
+.list .buttonsector{
     height:var(--item-line-height);
-    width:19%;
+    width:20%;
     background-color:pink;
     display:flex;
     align-items: center;
     justify-content: center;
 }
-.container .filebtn{
+
+.list .filebtn{
     height:80%;
     width:80%;
     font-size:15px;
@@ -109,66 +150,12 @@
     align-items: center;
     justify-content: center;
 }
-.container .addbtn{
-    height:60px;
-    width:100px;
-    font-size:20px;
-    color:black;
-    text-align: center;
-}
+
 
 /*　テキストボックスサイズ　*/
-.container .textbox{
+.list .textbox{
     font-size:25px;
-    height:80%;
-    width:80%;
-    margin-left: 10px;
-}
-
-/*料金スペース*/
-.container .price_section{
-    height:auto;
-    width:100%;
-    display:flex;
-    gap:4px 2px;
-    align-items: center;
-    background-color: aquamarine;
-    flex-wrap: wrap;
-    padding-left: 10px;
-    margin-top:5px;
-    color:black;
-    font-size:25px;
-}
-
-.price_section .item_section{
-    width:28%;
-    height:80px;
-    display:flex;
-    flex-wrap: wrap;
-    align-items:center;
-}
-.item_section .item_name{
-    width:100%;
-    height:10%;
-    font-size:15px;
-}
-.item_section .item_text{
-    height:50%;
-    width:90%;
-}
-
-
-.container .footer{
-    height:60px;
-    width:100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    background-color: cadetblue;
-}
-.footer .button{
-    height:80%;
-    width:250px;
-    font-size: 20px;
-
+    height:85%;
+    width:97%;
+    margin-left: 2px;
 }

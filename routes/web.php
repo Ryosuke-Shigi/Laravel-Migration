@@ -71,6 +71,8 @@ Route::get('update/{ticket_code?}',"TicketController@update");
 Route::post('update/{ticket_code?}',"TicketController@update");
 Route::get('update_types/{ticket_code?}',"TicketController@update_types");
 Route::post('update_types/{ticket_code?}',"TicketController@update_types");
+Route::get('update_all/{ticket_code?}',"TicketController@update_all");
+Route::post('update_all/{ticket_code?}',"TicketController@update_all");
 //登録
 Route::get("store","TicketController@store");
 Route::post("store","TicketController@store");

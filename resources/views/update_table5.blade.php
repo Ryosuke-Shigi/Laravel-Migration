@@ -26,6 +26,7 @@
             @endforeach
             <form action="../update/{{$table[0]->ticket_code}}" method="POST" enctype= "multipart/form-data">
             @csrf
+
             @foreach($table as $record)
                 <tr>
                     <input type="hidden" name="id[]" value={{ $record->id }}>
