@@ -1,0 +1,148 @@
+@charset "UTF-8";
+
+:root{
+    --form-backcolor:rgba(255,255,255,0.5);
+  }
+  /* リセット */
+  body, h1,h2,h3,h4,h5,h6,p,ul,li,figure{
+    margin:0;
+    padding:0;
+    list-style: none;
+  }
+  /*　初期設定　*/
+  body{
+    font-size:15px;
+    font-family:"Noto Sans Jp", sans-serif;
+    box-sizing:border-box;  /*幅と高さに　padding borderを含める*/
+    overflow:hidden;
+  }
+
+.wrapper{
+    width:100vw;
+    height:100vh;
+    display:flex;
+    font-size:15px;
+    background-color:rgba(120,120,120,120);
+    justify-content:center;
+    align-items: center;
+    flex-wrap:wrap;
+}
+
+.container{
+    width:90%;
+    height:auto;
+    padding:20px;
+    background-color: bisque;
+    display:flex;
+    align-items: center;
+    text-align: center;
+    flex-wrap: wrap;
+    overflow-x: hidden;
+}
+
+.container .pagetitle{
+    width:100%;
+    height:50px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding-left: 10px;
+    background-color: rgba(255, 0, 0, 0.5);
+    font-size:30px;
+    font-weight: bold;
+}
+
+.container .item_name{
+    width:100%;
+    height:30px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding-left: 10px;
+    background-color: rgba(243, 116, 116, 0.5);
+    font-size:20px;
+    font-weight: bold;
+}
+.container .item_data{
+    width:100%;
+    height:30px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding-left: 30px;
+    background-color: rgba(255, 251, 0, 0.5);
+    font-size:20px;
+}
+
+.container .title{
+    width:100%;
+    height:40px;
+    padding-left:10px;
+    display: flex;
+    align-items: center;
+    background-color:rgba(0, 255, 0, 0.5);
+    font-size:30px;
+    font-weight: bolder;
+}
+
+.container .input_field{
+    width:1030px;
+    height:auto;
+    padding:10px;
+    background-color: rgba(255, 115, 0, 0.5);
+    display:flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.input_field .item_field{
+    width:230px;
+    height:auto;
+    margin-top:10px;
+    background-color: rgba(127, 255, 212, 0.795);
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input_field .item_field:not(:first-of-type){
+    margin-left: 30px;
+}
+
+.item_field .item_name{
+    width:100%;
+    height:30px;
+    font-size:20px;
+    color: brown;
+    display: flex;
+    align-items: center;
+}
+.item_field .item_box{
+    width:100%;
+    height:30px;
+    font-size: 20px;
+}
+
+.input_field form{
+    width:100%;
+}
+
+.container .footer{
+    width: 100%;
+    height:auto;
+    padding:10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(25, 0, 255, 0.534);
+}
+
+.footer .btn{
+    font-size:25px;
+    width:200px;
+    height:50px;
+}
+.footer .btn:last-of-type{
+    margin-left: 20px;
+}
