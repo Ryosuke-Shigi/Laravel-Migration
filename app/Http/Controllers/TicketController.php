@@ -9,12 +9,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 //ログイン・ログアウト
 use Auth;
 
+//日時関係で使用　２０２１年１０月１０日追加
+use Carbon\Carbon;
+
 
 use App\Models\table01;
+use App\Models\table02;
 use App\Models\table03;
 use App\Models\table04;
 use App\Models\table05;
 use App\Models\table06;
+use App\Models\table07;
 
 
 class TicketController extends Controller
@@ -62,7 +67,29 @@ class TicketController extends Controller
         //一覧表示したらログアウトさせる
         Auth::logout();
 
-        return view("index_ticket",compact('table'));
+        return view("ticket_register",compact('table'));
+    }
+
+    public function sales_period_index(){
+
+        /* 販売期間登録 一覧表示へ */
+        $table=DB::table('tables01')
+        ->join('tables02','tables01.ticket_code','=','tables02.ticket_code')
+        ->join('tables07','tables01.ticket_code','=','tables07.ticket_code')
+        ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables02.sales_interval_start','tables02.sales_interval_end','tables07.ticket_num'])
+        ->paginate(10);
+        //一覧表示したらログアウトさせる
+        Auth::logout();
+
+        return view("sales_period_index",compact('table'));
+
+
+    }
+
+    /*販売期間登録　商品番号選択画面*/
+    public function sales_period(){
+        $table=DB::table('tables01')->get();
+        return view("sales_period",compact('table'));
     }
 
 
@@ -84,7 +111,7 @@ class TicketController extends Controller
         //tables01更新
         $table=table01::where('ticket_code',$ticket_code)
         ->first();
-        dump($table);//findもしくはfirst　１レコードずつになる
+        //findもしくはfirst　１レコードずつになる
         //ジャンルコード
         if(isset($request->genre_code1)){
             $table->genre_code1=1;
@@ -250,6 +277,7 @@ class TicketController extends Controller
 
         return redirect('index');
     }
+
 
 
 
@@ -466,12 +494,97 @@ class TicketController extends Controller
         return redirect('index3');
     }
 
+
+    //フリーチケット登録
+    public function sales_period_create(Request $request){
+
+        $tables02 = new table02;
+        $tables07 = new table07;
+        //dump($tables07->count());
+        //dump($request);
+        //dump($request->sales_interval_start_date." ".$request->sales_interval_start_times);
+        DB::beginTransaction();
+        try{
+            //tables02
+            //事業者IDID
+            $tables02->biz_id=1;
+            //商品番号
+            $tables02->ticket_code=$request->ticket_code;
+            //販売期間
+            $tables02->sales_interval_start=$request->sales_interval_start_date." ".$request->sales_interval_start_times;
+            $tables02->sales_interval_end=$request->sales_interval_end_date." ".$request->sales_interval_end_times;
+
+
+            //つけないと整合性エラー
+            $tables02->sales_id=10;
+
+            //tables02保存
+            $tables02->save();
+            dump($tables02);
+            //tables07
+            //事業者ID
+            $tables07->biz_id=1;//固定
+            //商品番号
+            $tables07->ticket_code=$request->ticket_code;
+            //販売ID
+            //$tables07->sales_id=$request->ticket_code."($tables07->count()+1)";
+            $tables07->sales_id=10;
+            //チケット利用可能日時（開始）
+            //チケット利用可能日時（終了）
+            //チケット有効日数
+            //フリーチケット tables07
+            if($request->tickets_kind==1){
+                //チケット利用可能日時（開始）
+                $tables07->ticket_interval_start=$request->ticket_interval_start;
+                //チケット利用可能日時（終了）
+                $tables07->ticket_interval_end=$request->ticket_interval_end;
+                //チケット有効日数
+                $tables07->ticket_num=$request->ticket_num;
+                //チケット有効日数　フリーであれば　０固定
+                $tables07->ticket_days=0;
+            }else{  //指定チケット
+                //チケット利用可能日時（開始）
+                $tables07->ticket_interval_start=$request->ticket_buy_date;
+                //チケット利用可能日時（終了）
+                $tables07->ticket_interval_end=$request->ticket_buy_date;
+                //チケット有効日数
+                $tables07->ticket_days=$request->ticket_interval;
+            }
+            //チケット販売枚数
+            $tables07->ticket_num=$request->ticket_num;
+            //チケット最小購入枚数
+            $tables07->ticket_min_num=$request->ticket_min_num;
+            //チケット最大購入枚数
+            $tables07->ticket_max_num=$request->ticket_max_num;
+            $tables07->save();
+
+
+
+            //変更を確定させる
+            //DB::commit();               //処理を実行する
+        }catch(Exception $exception){    //catch()で例外クラスを指定する　Exceptionはphpの例外クラス
+            //データ操作を巻き戻す
+            DB::RollBack();             //処理を戻す
+                    throw $exception;           //例外を投げる（例外を知らせる）例外メッセージの取得はExceptionのgetMessage();
+        }
+        return redirect('sales_period_index');
+    }
+
     //table3の中身を表示する
     public function index3(){
         $table = table03::paginate(10);
         return view("index_table3",compact('table'));
     }
 
+
+
+    //販売期間登録画面
+    public function sales_period_register(Request $request){
+        $table=DB::table('tables01')->join('tables06','tables01.ticket_code','=','tables06.ticket_code')
+        ->where('ticket_name',$request->ticket_name)->first();
+
+        return view("sales_period_register",compact('table'));
+    }
 
 
 }

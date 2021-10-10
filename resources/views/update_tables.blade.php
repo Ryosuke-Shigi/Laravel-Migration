@@ -67,20 +67,20 @@
             <!--名称・金額・キャンセル料-->
             <table class = "tableitem">
                 <tr class = "titletr">
-            @foreach($tabletitles as $index)
-                <td class="titletd">{{ $index }}</div></td><!--項目名-->
-            @endforeach
+                @foreach($tabletitles as $index)
+                    <td class="titletd">{{ $index }}</div></td><!--項目名-->
+                @endforeach
                 </tr>
-            @foreach($table5 as $record)
-                <tr>
-                    <input type="hidden" name="id[]" value={{ $record->id }}>
-                    <input type="hidden" name="type_id[]" value={{ $record->type_id }}>
-                    <td class="itemtd"><input type="text" class="textbox" name="type_name[]" value={{ $record->type_name }}></td>
-                    <td class="itemtd"><input type="text" class="textbox" name="type_money[]" value={{ $record->type_money }}></td>
-                    <td class="itemtd"><input type="text" class="textbox" name="cancel_rate[]" value={{ $record->cancel_rate }}></td>
-                </tr>
-            @endforeach
-        </table>
+                @foreach($table5 as $record)
+                    <tr>
+                        <input type="hidden" name="id[]" value={{ $record->id }}>
+                        <input type="hidden" name="type_id[]" value={{ $record->type_id }}>
+                        <td class="itemtd"><input type="text" class="textbox" name="type_name[]" value={{ $record->type_name }}></td>
+                        <td class="itemtd"><input type="text" class="textbox" name="type_money[]" value={{ $record->type_money }}></td>
+                        <td class="itemtd"><input type="text" class="textbox" name="cancel_rate[]" value={{ $record->cancel_rate }}></td>
+                    </tr>
+                @endforeach
+            </table>
 
         <div class="itemname_line">注意事項</div>
         <div class="itemsector"><input class="textbox" type="text" id="item_notes" name="item_notes" @if(isset($table4[2]->cautions_text)) value="{{ $table4[2]->cautions_text }}" @endif></div>

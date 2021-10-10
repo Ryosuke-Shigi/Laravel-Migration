@@ -58,6 +58,9 @@ Route::post("Taxifare","TestController@Taxifare",);
 //チケット登録画面
 Route::get("index","TicketController@index");
 Route::post("index","TicketController@index");
+//販売期間登録画面
+Route::get("sales_period_index","TicketController@sales_period_index");
+Route::post("sales_period_index","TicketController@sales_period_index");
 //新規登録画面
 Route::get("create","TicketController@create");
 Route::post("create","TicketController@create");
@@ -81,8 +84,16 @@ Route::post("store","TicketController@store");
 Route::get("index3","TicketController@index3");
 Route::get("index3","TicketController@index3");
 
+//販売期間登録　商品番号選択
+Route::get("sales_period","TicketController@sales_period");
+Route::post("sales_period","TicketController@sales_period");
+//販売期間　チケット登録画面
+Route::get("sales_period_register","TicketController@sales_period_register");
+Route::post("sales_period_register","TicketController@sales_period_register");
+//販売期間登録
+Route::get("sales_period_create","TicketController@sales_period_create");
+Route::post("sales_period_create","TicketController@sales_period_create");
 
 //ログイン　追加
 Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
