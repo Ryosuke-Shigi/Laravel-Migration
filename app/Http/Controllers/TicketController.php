@@ -498,6 +498,7 @@ class TicketController extends Controller
     //フリーチケット登録
     public function sales_period_create(Request $request){
 
+
         $tables02 = new table02;
         $tables07 = new table07;
         //dump($tables07->count());
@@ -515,12 +516,14 @@ class TicketController extends Controller
             $tables02->sales_interval_end=$request->sales_interval_end_date." ".$request->sales_interval_end_times;
 
 
-            //つけないと整合性エラー
-            $tables02->sales_id=10;
+            //商品番号（ticket_code)＋数字（１から順番につけていく）　tables07でも同様なので　同一名でいくようにしよう！
+            $code_num=DB::table('tables02')->where('ticket_code','like',"$request->ticket_code"."%")->get()->count()+1;
+            dump($code_num);
+            $tables02->sales_id=$tables07->sales_id=$code_num;
 
             //tables02保存
             $tables02->save();
-            dump($tables02);
+
             //tables07
             //事業者ID
             $tables07->biz_id=1;//固定
@@ -528,7 +531,7 @@ class TicketController extends Controller
             $tables07->ticket_code=$request->ticket_code;
             //販売ID
             //$tables07->sales_id=$request->ticket_code."($tables07->count()+1)";
-            $tables07->sales_id=10;
+            //$tables07->sales_id=10;
             //チケット利用可能日時（開始）
             //チケット利用可能日時（終了）
             //チケット有効日数
@@ -543,11 +546,11 @@ class TicketController extends Controller
                 //チケット有効日数　フリーであれば　０固定
                 $tables07->ticket_days=0;
             }else{  //指定チケット
-                //チケット利用可能日時（開始）
-                $tables07->ticket_interval_start=$request->ticket_buy_date;
-                //チケット利用可能日時（終了）
-                $tables07->ticket_interval_end=$request->ticket_buy_date;
-                //チケット有効日数
+                //チケット利用可能日時（開始） 指定チケットの場合は現在時刻をいれる
+                $tables07->ticket_interval_start=Carbon::now()->toDateTimeString();//Carbon::now()静的メソッド呼び出し　carbon 現在日時
+                //チケット利用可能日時（終了）　carbon::now()+$request->ticket_interval　がはいる
+                $tables07->ticket_interval_end=Carbon::now()->addday($request->ticket_interval)->toDateTimeString();    //toDateTimeString()がフォーマット変換
+                //チケット有効日数　指定の場合　有効期限を格納
                 $tables07->ticket_days=$request->ticket_interval;
             }
             //チケット販売枚数
@@ -558,9 +561,7 @@ class TicketController extends Controller
             $tables07->ticket_max_num=$request->ticket_max_num;
             $tables07->save();
 
-
-
-            //変更を確定させる
+            //変更を確定させる まだ曖昧な部分があるので　コミットはまだしない　２０２１年１０月１０日１８：５７
             //DB::commit();               //処理を実行する
         }catch(Exception $exception){    //catch()で例外クラスを指定する　Exceptionはphpの例外クラス
             //データ操作を巻き戻す
