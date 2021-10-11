@@ -69,6 +69,10 @@ Route::get('delete/{ticket_code?}/{ticket_name?}',"TicketController@delete");
 Route::post('delete/{ticket_code?}/{ticket_name?}',"TicketController@delete");
 Route::get('delete_ticket_code_name/{ticket_code?}/{ticket_name?}',"TicketController@delete_ticket_code_name");
 Route::post('delete_ticket_code_name/{ticket_code?}/{ticket_name?}',"TicketController@delete_ticket_code_name");
+//販売期間登録　削除
+Route::get('delete_ticket_code_sales_period/{ticket_code?}',"TicketController@delete_ticket_code_sales_period");
+Route::post('delete_ticket_code_sales_period/{ticket_code?}',"TicketController@delete_ticket_code_sales_period");
+
 //編集
 Route::get('update/{ticket_code?}',"TicketController@update");
 Route::post('update/{ticket_code?}',"TicketController@update");
@@ -88,8 +92,8 @@ Route::get("index3","TicketController@index3");
 Route::get("sales_period","TicketController@sales_period");
 Route::post("sales_period","TicketController@sales_period");
 //販売期間　チケット登録画面
-Route::get("sales_period_register","TicketController@sales_period_register");
-Route::post("sales_period_register","TicketController@sales_period_register");
+Route::get("sales_period_register/{ticket_name}","TicketController@sales_period_register");
+Route::post("sales_period_register/{ticket_name}","TicketController@sales_period_register");
 //販売期間登録
 Route::get("sales_period_create","TicketController@sales_period_create");
 Route::post("sales_period_create","TicketController@sales_period_create");

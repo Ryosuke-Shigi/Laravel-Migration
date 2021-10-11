@@ -28,7 +28,7 @@
             @endforeach
         </select>
     </div>
-    <button type="submit" class="btnstyle" formaction="sales_period_register">選択</button>
+    <button type="submit" class="btnstyle" formaction="sales_period_register/{{ $index->ticket_name }}">選択</button>
     <button type="submit" class="btnstyle" formaction="sales_period_index">戻る</button>
     </form>
 </div>

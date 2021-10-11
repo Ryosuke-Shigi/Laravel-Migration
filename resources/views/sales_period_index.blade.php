@@ -37,7 +37,7 @@
 
 
                         <td class="itemtd"><button type="submit" formaction="update_all/{{$index->ticket_code}}">編集</button></td>
-                        <td class="itemtd"><button type="submit" formaction="delete_ticket_code_name/{{$index->ticket_code}}/{{$index->ticket_name}}">削除</button></td>
+                        <td class="itemtd"><button type="submit" formaction="delete_ticket_code_sales_period/{{$index->ticket_code}}">削除</button></td>
 
 
                     </tr>
