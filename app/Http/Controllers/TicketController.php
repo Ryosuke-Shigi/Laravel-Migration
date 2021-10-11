@@ -267,7 +267,7 @@ class TicketController extends Controller
 
         return redirect('index3');
     }
-    //削除
+    //テーブル０１基準　削除
     public function delete_ticket_code_name($ticket_code,$ticket_name){
         //ticket_codeとticket_nameの二つをwhereでわけて、削除する
         //table1からtable3,table5は関連付けされているので　一緒にその他データも削除される
@@ -276,6 +276,12 @@ class TicketController extends Controller
         ->first()->delete();
 
         return redirect('index');
+    }
+    //販売期間登録削除
+    public function delete_ticket_code_sales_period($ticket_code){
+        table02::where('ticket_code',$ticket_code)
+        ->first()->delete();
+        return redirect('sales_period_index');
     }
 
 
@@ -501,6 +507,36 @@ class TicketController extends Controller
 
         $tables02 = new table02;
         $tables07 = new table07;
+
+        //試してみたものの　エラーが発生した際、sales_period_registerに送っていたテーブルデータを
+        //再度送ることができないので、使用できていない
+        //validateのエラーが発生した際の設定を組み込む必要がある
+        $this->validate($request,[
+            //共通
+            'sales_interval_start_date'=>'required',
+            'sales_interval_start_times'=>'required',
+            'sales_interval_end_date'=>'required',
+            'sales_interval_end_times'=>'required',
+
+            //フリーチケット
+            'ticket_interval_start'=>'required',
+            'ticket_interval_end'=>'required',
+            //指定チケット
+            'ticket_interval'=>'required|integer',
+            'ticket_buy_date'=>'required',
+
+            //共通
+            'ticket_num'=>'required|integer',
+            'ticket_min_num'=>'required|integer',
+            'ticket_max_num'=>'required|integer'
+        ],[
+            'ticket_interval.integer'=>'数字を入力してください',
+            'ticket_min_num.integer'=>'数字を入力してください',
+            'ticket_max_num.integer'=>'数字を入力してください'
+        ]);
+
+
+
         //dump($tables07->count());
         //dump($request);
         //dump($request->sales_interval_start_date." ".$request->sales_interval_start_times);
@@ -511,14 +547,13 @@ class TicketController extends Controller
             $tables02->biz_id=1;
             //商品番号
             $tables02->ticket_code=$request->ticket_code;
-            //販売期間
+            //販売期間 開始日時と時間　." ". は間に空白を入れないと　書式があわなくなるため 2021-10-11 10:10:10 の中心空白部分
             $tables02->sales_interval_start=$request->sales_interval_start_date." ".$request->sales_interval_start_times;
             $tables02->sales_interval_end=$request->sales_interval_end_date." ".$request->sales_interval_end_times;
 
 
             //商品番号（ticket_code)＋数字（１から順番につけていく）　tables07でも同様なので　同一名でいくようにしよう！
             $code_num=DB::table('tables02')->where('ticket_code','like',"$request->ticket_code"."%")->get()->count()+1;
-            dump($code_num);
             $tables02->sales_id=$tables07->sales_id=$code_num;
 
             //tables02保存
@@ -562,7 +597,7 @@ class TicketController extends Controller
             $tables07->save();
 
             //変更を確定させる まだ曖昧な部分があるので　コミットはまだしない　２０２１年１０月１０日１８：５７
-            //DB::commit();               //処理を実行する
+            DB::commit();               //処理を実行する
         }catch(Exception $exception){    //catch()で例外クラスを指定する　Exceptionはphpの例外クラス
             //データ操作を巻き戻す
             DB::RollBack();             //処理を戻す
@@ -570,21 +605,23 @@ class TicketController extends Controller
         }
         return redirect('sales_period_index');
     }
+    //販売期間登録画面
+    //validateを使用する際　Requestのデータは引き継げない
+    public function sales_period_register($ticket_name){
+        $table=DB::table('tables01')->join('tables06','tables01.ticket_code','=','tables06.ticket_code')
+        ->where('ticket_name',$ticket_name)->first();
+
+        return view("sales_period_register",compact('table'));
+    }
+
+
+
+
 
     //table3の中身を表示する
     public function index3(){
         $table = table03::paginate(10);
         return view("index_table3",compact('table'));
-    }
-
-
-
-    //販売期間登録画面
-    public function sales_period_register(Request $request){
-        $table=DB::table('tables01')->join('tables06','tables01.ticket_code','=','tables06.ticket_code')
-        ->where('ticket_name',$request->ticket_name)->first();
-
-        return view("sales_period_register",compact('table'));
     }
 
 

@@ -11,6 +11,7 @@
 
 <div class="container">
     <div class="pagetitle">
+        <?php dump($table)  ?>
         @if($table->tickets_kind==1)
             フリーチケット登録画面
         @else
@@ -40,19 +41,19 @@
     <div class="input_field">
         <div class="item_field">
             <div class="item_name">販売日付（開始）</div>
-            <input type="date" name="sales_interval_start_date" class="item_box"></input><!--tables02-->
+            <input type="date" name="sales_interval_start_date" class="item_box" value={{ old('sales_interval_start_date') }}></input><!--tables02-->
         </div>
         <div class="item_field">
             <div class="item_name">販売時間（開始）</div>
-            <input type="time" name="sales_interval_start_times" class="item_box"></input><!--tables02-->
+            <input type="time" name="sales_interval_start_times" class="item_box" value={{ old('sales_interval_start_times') }}></input><!--tables02-->
         </div>
         <div class="item_field">
             <div class="item_name">販売日付（終了）</div>
-            <input type="date" name="sales_interval_end_date" class="item_box"></input><!--tables02-->
+            <input type="date" name="sales_interval_end_date" class="item_box" value={{ old('sales_interval_end_date') }}></input><!--tables02-->
         </div>
         <div class="item_field">
             <div class="item_name">販売時間（終了）</div>
-            <input type="time" name="sales_interval_end_timess" class="item_box"></input><!--tables02-->
+            <input type="time" name="sales_interval_end_times" class="item_box" value={{ old('sales_interval_end_times') }}></input><!--tables02-->
         </div>
     </div>
 
@@ -61,25 +62,25 @@
         <div class="input_field">
             <div class="item_field">
                 <div class="item_name">有効期限（開始）</div>
-                <input type="date" name="ticket_interval_start" class="item_box"></input><!--tables07-->
+                <input type="date" name="ticket_interval_start" class="item_box" value={{ old('ticket_interval_start') }}></input><!--tables07-->
             </div>
             <div class="item_field">
                 <div class="item_name">有効期限（終了）</div>
-                <input type="date" name="ticket_interval_end" class="item_box"></input><!--tables07-->
+                <input type="date" name="ticket_interval_end" class="item_box" value={{ old('ticket_interval_end') }}></input><!--tables07-->
             </div>
         </div>
         <div class="input_field">
             <div class="item_field">
                 <div class="item_name">販売枚数</div>
-                <input type="text" name="ticket_num" class="item_box"></input><!--tables07-->
+                <input type="text" name="ticket_num" class="item_box" value={{ old('ticket_num') }}></input><!--tables07-->
             </div>
             <div class="item_field">
-                <div class="item_name">一枚あたりの最小枚数</div>
-                <input type="text" name="ticket_min_num" class="item_box"></input><!--tables07-->
+                <div class="item_name">１枚あたりの最小枚数</div>
+                <input type="text" name="ticket_min_num" class="item_box" value={{ old('ticket_min_num') }}></input><!--tables07-->
             </div>
             <div class="item_field">
                 <div class="item_name">１枚あたりの最大枚数</div>
-                <input type="text" name="ticket_max_num" class="item_box"></input><!--tables07-->
+                <input type="text" name="ticket_max_num" class="item_box" value={{ old('ticket_max_num') }}></input><!--tables07-->
             </div>
         </div>
 
@@ -87,26 +88,26 @@
         <div class="input_field">
             <div class="item_field">
                 <div class="item_name">有効期限</div>
-                <input type="text" name="ticket_interval" class="item_box"></input>
+                <input type="text" name="ticket_interval" class="item_box" value={{ old('ticket_interval') }}></input>
             </div>
         </div>
         <div class="title">予約日</div>
         <div class="input_field">
             <div class="item_field">
                 <div class="item_name">利用可能日</div>
-                <input type="date" name="ticket_buy_date" class="item_box"></input>
+                <input type="date" name="ticket_buy_date" class="item_box" value={{ old('ticket_buy_date') }}></input>
             </div>
             <div class="item_field">
                 <div class="item_name">販売枚数</div>
-                <input type="text" name="ticket_num" class="item_box"></input>
+                <input type="text" name="ticket_num" class="item_box" value={{ old('ticket_num') }}></input>
             </div>
             <div class="item_field">
                 <div class="item_name">１枚あたりの最小枚数</div>
-                <input type="text" name="ticket_min_num" class="item_box"></input>
+                <input type="text" name="ticket_min_num" class="item_box" value={{ old('ticket_min_num') }}></input>
             </div>
             <div class="item_field">
                 <div class="item_name">１枚あたりの最大枚数</div>
-                <input type="text" name="ticket_max_num" class="item_box"></input>
+                <input type="text" name="ticket_max_num" class="item_box" value={{ old('ticket_max_num') }}></input>
             </div>
 
         </div>
