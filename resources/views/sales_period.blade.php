@@ -22,15 +22,23 @@
     <form name="ticket_form" action="" method="POST" enctype= "multipart/form-data">
     @csrf
     <div class="pullfield">
-        <select name="ticket_name" id="ticket_name" class="ticket_name">
+        <select name="ticket_name" id="ticket_name" class="ticket_name" onchange="ticket_name_select(this)">
+            <option>商品番号選択</option>
             @foreach($table as $index)
                 <option value="{{ $index->ticket_name }}">{{ $index->ticket_name }}</option>
             @endforeach
         </select>
     </div>
-    <button type="submit" class="btnstyle" formaction="sales_period_register/{{ $index->ticket_name }}">選択</button>
+    <button type="submit" id="sales_period_register_btn" class="btnstyle" >選択</button>
     <button type="submit" class="btnstyle" formaction="sales_period_index">戻る</button>
     </form>
 </div>
 
 @endsection
+
+<script>
+    function ticket_name_select(obj){
+        document.ticket_form.action="sales_period_register/"+obj.value;
+    }
+
+</script>
