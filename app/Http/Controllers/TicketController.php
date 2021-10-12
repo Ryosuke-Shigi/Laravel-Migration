@@ -73,11 +73,13 @@ class TicketController extends Controller
     public function sales_period_index(){
 
         /* 販売期間登録 一覧表示へ */
-        $table=DB::table('tables01')
-        ->join('tables02','tables01.ticket_code','=','tables02.ticket_code')
-        ->join('tables07','tables01.ticket_code','=','tables07.ticket_code')
-        ->select(['tables01.id','tables01.biz_id','tables01.ticket_code','tables01.ticket_name','tables02.sales_interval_start','tables02.sales_interval_end','tables07.ticket_num'])
+        $table=DB::table('tables02')
+        ->join('tables07','tables02.sales_id','=','tables07.sales_id')
+        ->leftjoin('tables01','tables02.ticket_code','=','tables01.ticket_code')
+
+        ->select(['tables02.id','tables02.biz_id','tables02.ticket_code','tables01.ticket_name','tables02.sales_interval_start','tables02.sales_interval_end','tables07.ticket_num'])
         ->paginate(10);
+        dump($table);
         //一覧表示したらログアウトさせる
         Auth::logout();
 
@@ -511,30 +513,50 @@ class TicketController extends Controller
         //試してみたものの　エラーが発生した際、sales_period_registerに送っていたテーブルデータを
         //再度送ることができないので、使用できていない
         //validateのエラーが発生した際の設定を組み込む必要がある
-        $this->validate($request,[
-            //共通
-            'sales_interval_start_date'=>'required',
-            'sales_interval_start_times'=>'required',
-            'sales_interval_end_date'=>'required',
-            'sales_interval_end_times'=>'required',
+        if($request->tickets_kind==1){
+            $this->validate($request,[
+                //共通
+                'sales_interval_start_date'=>'required',
+                'sales_interval_start_times'=>'required',
+                'sales_interval_end_date'=>'required',
+                'sales_interval_end_times'=>'required',
 
-            //フリーチケット
-            'ticket_interval_start'=>'required',
-            'ticket_interval_end'=>'required',
-            //指定チケット
-            'ticket_interval'=>'required|integer',
-            'ticket_buy_date'=>'required',
+                //フリーチケット
 
-            //共通
-            'ticket_num'=>'required|integer',
-            'ticket_min_num'=>'required|integer',
-            'ticket_max_num'=>'required|integer'
-        ],[
-            'ticket_interval.integer'=>'数字を入力してください',
-            'ticket_min_num.integer'=>'数字を入力してください',
-            'ticket_max_num.integer'=>'数字を入力してください'
-        ]);
+                'ticket_interval_start'=>'required',
+                'ticket_interval_end'=>'required',
 
+                //共通
+                'ticket_num'=>'required|integer',
+                'ticket_min_num'=>'required|integer',
+                'ticket_max_num'=>'required|integer'
+            ],[
+                'ticket_interval.integer'=>'数字を入力してください',
+                'ticket_min_num.integer'=>'数字を入力してください',
+                'ticket_max_num.integer'=>'数字を入力してください'
+            ]);
+        }else{
+            $this->validate($request,[
+                //共通
+                'sales_interval_start_date'=>'required',
+                'sales_interval_start_times'=>'required',
+                'sales_interval_end_date'=>'required',
+                'sales_interval_end_times'=>'required',
+
+                //指定チケット
+                'ticket_interval'=>'required|integer',
+                'ticket_buy_date'=>'required',
+
+                //共通
+                'ticket_num'=>'required|integer',
+                'ticket_min_num'=>'required|integer',
+                'ticket_max_num'=>'required|integer'
+            ],[
+                'ticket_interval.integer'=>'数字を入力してください',
+                'ticket_min_num.integer'=>'数字を入力してください',
+                'ticket_max_num.integer'=>'数字を入力してください'
+            ]);
+        }
 
 
         //dump($tables07->count());
@@ -553,8 +575,16 @@ class TicketController extends Controller
 
 
             //商品番号（ticket_code)＋数字（１から順番につけていく）　tables07でも同様なので　同一名でいくようにしよう！
-            $code_num=DB::table('tables02')->where('ticket_code','like',"$request->ticket_code"."%")->get()->count()+1;
-            $tables02->sales_id=$tables07->sales_id=$code_num;
+            //ticket_code%で数をカウント　複数なければ０　複数あればsales_idの最大値を+1して削除してもsales_idは重複しないようにする。
+            if(DB::table('tables02')
+                ->where('ticket_code','like',"$request->ticket_code"."%")
+                ->get()->count()==0){
+                //同じticket_codeがなければsales_idは１
+                $tables02->sales_id=$tables07->sales_id=1;
+            }else{
+                //同じticket_codeがあれば、sales_idは割り振られているのでmaxをとって＋１していれる
+                $tables02->sales_id=$tables07->sales_id=DB::table('tables02')->max('sales_id')+1;
+            }
 
             //tables02保存
             $tables02->save();

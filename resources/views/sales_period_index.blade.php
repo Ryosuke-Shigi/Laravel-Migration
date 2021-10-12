@@ -15,7 +15,7 @@
         <!-- 表 -->
         <div class="listfield">
             <table class = "tableitem">
-                <form action="index3" method="POST" enctype= "multipart/form-data"> <!-- indexは仮 -->
+                <form method="POST" enctype= "multipart/form-data"> <!-- indexは仮 -->
                 @csrf
                     <!-- 一覧表項目 -->
                     <tr class = "titletr">
