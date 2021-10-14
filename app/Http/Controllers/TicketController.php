@@ -86,12 +86,13 @@ class TicketController extends Controller
 
         /* 販売期間登録 一覧表示へ */
         $table=DB::table('tables02')
-        ->join('tables07','tables02.sales_id','=','tables07.sales_id')
         ->leftjoin('tables01','tables02.ticket_code','=','tables01.ticket_code')
+        ->join('tables07','tables02.sales_id','=','tables07.sales_id')
+
 
         ->select(['tables02.id','tables02.biz_id','tables02.ticket_code','tables01.ticket_name','tables02.sales_interval_start','tables02.sales_interval_end','tables07.ticket_num'])
         ->paginate(10);
-
+        dump($table);
         //一覧表示したらログアウトさせる
         Auth::logout();
 
