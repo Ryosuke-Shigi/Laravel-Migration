@@ -34,10 +34,10 @@ use App\Rules\sales_period_specialized_rule;
 
 
 
+
 class TicketController extends Controller
 {
     use SoftDeletes;
-
 
 
     //一覧表示

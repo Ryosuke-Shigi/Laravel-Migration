@@ -27,22 +27,22 @@
             <div class="errormsg">※ {{ $errors->first('ticket_name') }}</div>
         @endif
         <div class="itemname_line">概要</div>
-        <div class="itemsector"><input class="textbox" type="text" id="overview" name="overview"></div>
+        <div class="itemsector"><input class="textbox" type="text" id="overview" name="overview" value="{{ old('overview') }}"></div>
         <div class="itemname_line">画像</div>
-        <div class="itemsector"><input disabled class="textbox" type="text" id="overview_image" name="overview_image"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_overview" onchange="overview_select(this)"></div>
+        <div class="itemsector"><input disabled class="textbox" type="text" id="overview_image" name="overview_image" value="{{ old('overview_image') }}"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_overview" onchange="overview_select(this)"></div>
     <div class="contenttitle">詳細</div>
         <div class="itemname_line">紹介</div>
-        <div class="itemsector"><input disabled class="textbox" type="text" id="introduction" name="introduction"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_intro" onchange="intro_select(this)"></div>
+        <div class="itemsector"><input disabled class="textbox" type="text" id="introduction" name="introduction" value="{{ old('introduction') }}"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_intro" onchange="intro_select(this)"></div>
         <div class="itemname_line">重要注意事項</div>
-        <div class="itemsector"><input class="textbox" type="text" id="important_notes" name="important_notes"></div>
+        <div class="itemsector"><input class="textbox" type="text" id="important_notes" name="important_notes" value="{{ old('important_notes') }}"></div>
         <div class="itemname_line">チケット紹介</div>
-        <div class="itemsector"><input class="textbox" type="text" id="contents_data" name="contents_data"></div>
+        <div class="itemsector"><input class="textbox" type="text" id="contents_data" name="contents_data" value="{{ old('contents_data') }}"></div>
         <div class="itemname_line">紹介画像</div>
-        <div class="itemsector"><input disabled class="textbox" type="text" id="contents_image" name="contents_image"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_intro" onchange="contents_select(this)"></div>
+        <div class="itemsector"><input disabled class="textbox" type="text" id="contents_image" name="contents_image" value="{{ old('contents_image') }}"></div><div class="buttonsector"><input type="file" class="filebtn" id="file_intro" onchange="contents_select(this)"></div>
         <div class="itemname_line">注意事項</div>
-        <div class="itemsector"><input class="textbox" type="text" id="detail_notes" name="detail_notes"></div>
+        <div class="itemsector"><input class="textbox" type="text" id="detail_notes" name="detail_notes" value="{{ old('detail_notes') }}"></div>
         <div class="itemname_line">お問合せ</div>
-        <div class="itemsector"><input class="textbox" type="text" id="ticket_remarks" name="ticket_remarks"></div>
+        <div class="itemsector"><input class="textbox" type="text" id="ticket_remarks" name="ticket_remarks" value="{{ old('ticket_remarks') }}"></div>
 
     <div class="contenttitle">商品設定</div>
         <div class="itemname_line">商品番号</div>
@@ -88,7 +88,7 @@
 
 
     <div class="itemname_line">注意事項</div>
-        <div class="itemsector"><input class="textbox" type="text" id="item_notes" name="item_notes"></div>
+        <div class="itemsector"><input class="textbox" type="text" id="item_notes" name="item_notes" value="{{ old('item_notes') }}"></div>
 
     <div class="contenttitle">チケット設定</div>
         <input type="radio" name="tickets_kind" id="ticket_free" value="1"><label for="ticket_free">フリーチケット</label>
@@ -96,11 +96,11 @@
 
     <div class="contenttitle">サービス設定</div>
     <div class="itemname_line">サービス名</div>
-    <div class="itemsector"><input class="textbox" type="text" id="svc_name" name="svc_name"></div>
+    <div class="itemsector"><input class="textbox" type="text" id="svc_name" name="svc_name" value="{{ old('svc_name') }}"></div>
     <div class="itemname_line">内容・注意事項</div>
-    <div class="itemsector"><input class="textbox" type="text" id="svc_cautions01" name="service_content01"></div>
+    <div class="itemsector"><input class="textbox" type="text" id="svc_cautions01" name="service_content01" value="{{ old('service_content01') }}"></div>
     <div class="itemname_line"></div>
-    <div class="itemsector"><input disabled class="textbox" type="text" id="svc_cautions02" name="service_content02"></div><div class="buttonsector"><input type="file" class="filebtn" id="svc_file" onchange="svc_select(this)"></div>
+    <div class="itemsector"><input disabled class="textbox" type="text" id="svc_cautions02" name="service_content02" value="{{ old('service_content02') }}"></div><div class="buttonsector"><input type="file" class="filebtn" id="svc_file" onchange="svc_select(this)"></div>
     <div class="itemname_multi">サービス種類</div>
         <input type="radio" name="svc_type" id="svc_type01" value="1"><label for="svc_type01">サービス１</label>
         <input type="radio" name="svc_type" id="svc_type02" value="2"><label for="svc_type02">サービス２</label>
