@@ -31,6 +31,7 @@ class store_rule extends FormRequest
             'cancel_limit'=>'integer'
         ];
     }
+
     public function messages(){
         return [
             'ticket_name.required'=>'チケット名は必須です。',

@@ -27,6 +27,12 @@ use App\Models\table05;
 use App\Models\table06;
 use App\Models\table07;
 
+//フリーチケット時のvalidation rule
+use App\Rules\sales_period_free_rule;
+//指定チケット時のvalidation rule
+use App\Rules\sales_period_specialized_rule;
+
+
 
 
 class TicketController extends Controller
