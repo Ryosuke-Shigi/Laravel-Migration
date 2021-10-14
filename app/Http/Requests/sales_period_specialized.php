@@ -43,7 +43,7 @@ class sales_period_specialized extends FormRequest
     }
 
 
-    public function message(){
+    public function messages(){
         return [
             'ticket_interval.integer'=>'数字を入力してください',
             'ticket_min_num.integer'=>'数字を入力してください',
