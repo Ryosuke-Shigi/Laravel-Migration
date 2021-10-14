@@ -92,11 +92,15 @@ Route::get("index3","TicketController@index3");
 Route::get("sales_period","TicketController@sales_period");
 Route::post("sales_period","TicketController@sales_period");
 //販売期間　チケット登録画面
-Route::get("sales_period_register/{ticket_name}","TicketController@sales_period_register");
-Route::post("sales_period_register/{ticket_name}","TicketController@sales_period_register");
-//販売期間登録
+Route::get("sales_period_register/{ticket_name}/{tickets_kind?}","TicketController@sales_period_register");
+Route::post("sales_period_register/{ticket_name}/{tickets_kind?}","TicketController@sales_period_register")->middleware('free_specialized');
+//販売期間登録　
 Route::get("sales_period_create","TicketController@sales_period_create");
 Route::post("sales_period_create","TicketController@sales_period_create");
+Route::get("sales_period_free_create","TicketController@sales_period_free_create");
+Route::post("sales_period_free_create","TicketController@sales_period_free_create");
+Route::get("sales_period_specialized_create","TicketController@sales_period_specialized_create");
+Route::post("sales_period_specialized_create","TicketController@sales_period_specialized_create");
 
 //ログイン　追加
 Auth::routes();

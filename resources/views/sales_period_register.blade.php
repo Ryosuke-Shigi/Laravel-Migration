@@ -11,7 +11,6 @@
 
 <div class="container">
     <div class="pagetitle">
-        <?php dump($table)  ?>
         @if($table->tickets_kind==1)
             フリーチケット登録画面
         @else
@@ -113,10 +112,13 @@
         </div>
     @endif
     <div class="footer">
-        <button type="submit" class="btn" formaction="{{ asset('sales_period_create') }}">登録</button>
+        <button type="submit" class="btn" formaction="@if($table->tickets_kind==1){{ asset('sales_period_free_create') }}@else{{ asset('sales_period_specialized_create') }}@endif">登録</button>
         <button type="submit" class="btn" formaction="{{ asset('sales_period') }}">戻る</button>
     </div>
     </form>
 </div>
+
+
+
 
 @endsection

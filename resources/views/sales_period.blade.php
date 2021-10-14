@@ -25,7 +25,7 @@
         <select name="ticket_name" id="ticket_name" class="ticket_name" onchange="ticket_name_select(this)">
             <option>商品番号選択</option>
             @foreach($table as $index)
-                <option value="{{ $index->ticket_name }}">{{ $index->ticket_name }}</option>
+                <option value="{{ $index->ticket_name }}/{{ $index->tickets_kind }}">{{ $index->ticket_name }}</option>
             @endforeach
         </select>
     </div>

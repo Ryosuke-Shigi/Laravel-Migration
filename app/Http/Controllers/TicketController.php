@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
+//validation formrequest 2021/10/14
+use App\Http\Requests\sales_period_free;
+use App\Http\Requests\sales_period_specialized;
+use App\Http\Requests\store_rule;
+
 //ログイン・ログアウト
 use Auth;
 
@@ -20,6 +26,12 @@ use App\Models\table04;
 use App\Models\table05;
 use App\Models\table06;
 use App\Models\table07;
+
+//フリーチケット時のvalidation rule
+use App\Rules\sales_period_free_rule;
+//指定チケット時のvalidation rule
+use App\Rules\sales_period_specialized_rule;
+
 
 
 class TicketController extends Controller
@@ -79,7 +91,7 @@ class TicketController extends Controller
 
         ->select(['tables02.id','tables02.biz_id','tables02.ticket_code','tables01.ticket_name','tables02.sales_interval_start','tables02.sales_interval_end','tables07.ticket_num'])
         ->paginate(10);
-        dump($table);
+
         //一覧表示したらログアウトさせる
         Auth::logout();
 
@@ -291,9 +303,9 @@ class TicketController extends Controller
 
 
     //登録作業
-    public function create(Request $request){
+    public function create(store_rule $request){
 
-        $this->validate($request,[
+/*         $this->validate($request,[
             'ticket_name'=>'required',
             'type_money.*'=>'required|integer',//配列ではname.*で
             'ticket_code'=>'required|string|max:5',
@@ -305,7 +317,7 @@ class TicketController extends Controller
             'ticket_code.max'=>'５文字以内で入力してください。',
             'ticket_code.required'=>'商品番号は必須です',
             'cancel_limit.integer'=>'数字を入力してください。'
-        ]);
+        ]); */
 
         //モデルをインスタンス化
         $tables01 = new table01;
@@ -498,13 +510,12 @@ class TicketController extends Controller
                 throw $exception;           //例外を投げる（例外を知らせる）例外メッセージの取得はExceptionのgetMessage();
         }
 
-
         return redirect('index3');
     }
 
 
-    //フリーチケット登録
-    public function sales_period_create(Request $request){
+    //チケット登録
+    public function sales_period_create(sales_period_free $request){
 
 
         $tables02 = new table02;
@@ -513,7 +524,9 @@ class TicketController extends Controller
         //試してみたものの　エラーが発生した際、sales_period_registerに送っていたテーブルデータを
         //再度送ることができないので、使用できていない
         //validateのエラーが発生した際の設定を組み込む必要がある
-        if($request->tickets_kind==1){
+        //$thisにはコントローラーそのものが含まれている　このコントローラーのvalidateという意味あいか
+
+/*         if($request->tickets_kind==1){
             $this->validate($request,[
                 //共通
                 'sales_interval_start_date'=>'required',
@@ -556,7 +569,7 @@ class TicketController extends Controller
                 'ticket_min_num.integer'=>'数字を入力してください',
                 'ticket_max_num.integer'=>'数字を入力してください'
             ]);
-        }
+        } */
 
 
         //dump($tables07->count());
@@ -577,7 +590,8 @@ class TicketController extends Controller
             //商品番号（ticket_code)＋数字（１から順番につけていく）　tables07でも同様なので　同一名でいくようにしよう！
             //ticket_code%で数をカウント　複数なければ０　複数あればsales_idの最大値を+1して削除してもsales_idは重複しないようにする。
             if(DB::table('tables02')
-                ->where('ticket_code','like',"$request->ticket_code"."%")
+                ->where('ticket_code','=',$request->ticket_code)
+                //->where('ticket_code','like',"$request->ticket_code"."%")
                 ->get()->count()==0){
                 //同じticket_codeがなければsales_idは１
                 $tables02->sales_id=$tables07->sales_id=1;
@@ -635,6 +649,149 @@ class TicketController extends Controller
         }
         return redirect('sales_period_index');
     }
+
+
+    //フリーチケット登録
+    public function sales_period_free_create(sales_period_free $request){
+
+
+        $tables02 = new table02;
+        $tables07 = new table07;
+
+        DB::beginTransaction();
+        try{
+            //tables02
+            //事業者IDID
+            $tables02->biz_id=1;
+            //商品番号
+            $tables02->ticket_code=$request->ticket_code;
+            //販売期間 開始日時と時間　." ". は間に空白を入れないと　書式があわなくなるため 2021-10-11 10:10:10 の中心空白部分
+            $tables02->sales_interval_start=$request->sales_interval_start_date." ".$request->sales_interval_start_times;
+            $tables02->sales_interval_end=$request->sales_interval_end_date." ".$request->sales_interval_end_times;
+
+
+            //商品番号（ticket_code)＋数字（１から順番につけていく）　tables07でも同様なので　同一名でいくようにしよう！
+            //ticket_code%で数をカウント　複数なければ０　複数あればsales_idの最大値を+1して削除してもsales_idは重複しないようにする。
+            if(DB::table('tables02')
+                ->where('ticket_code','=',$request->ticket_code)
+                //->where('ticket_code','like',"$request->ticket_code"."%")
+                ->get()->count()==0){
+                //同じticket_codeがなければsales_idは１
+                $tables02->sales_id=$tables07->sales_id=1;
+            }else{
+                //同じticket_codeがあれば、sales_idは割り振られているのでmaxをとって＋１していれる
+                $tables02->sales_id=$tables07->sales_id=DB::table('tables02')->max('sales_id')+1;
+            }
+
+            //tables02保存
+            $tables02->save();
+
+            //tables07
+            //事業者ID
+            $tables07->biz_id=1;//固定
+            //商品番号
+            $tables07->ticket_code=$request->ticket_code;
+
+            //チケット利用可能日時（開始）
+            $tables07->ticket_interval_start=$request->ticket_interval_start;
+            //チケット利用可能日時（終了）
+            $tables07->ticket_interval_end=$request->ticket_interval_end;
+            //チケット有効日数
+            $tables07->ticket_num=$request->ticket_num;
+            //チケット有効日数　フリーであれば　０固定
+            $tables07->ticket_days=0;
+
+            //チケット販売枚数
+            $tables07->ticket_num=$request->ticket_num;
+            //チケット最小購入枚数
+            $tables07->ticket_min_num=$request->ticket_min_num;
+            //チケット最大購入枚数
+            $tables07->ticket_max_num=$request->ticket_max_num;
+            $tables07->save();
+
+            //変更を確定させる まだ曖昧な部分があるので　コミットはまだしない　２０２１年１０月１０日１８：５７
+            DB::commit();               //処理を実行する
+        }catch(Exception $exception){    //catch()で例外クラスを指定する　Exceptionはphpの例外クラス
+            //データ操作を巻き戻す
+            DB::RollBack();             //処理を戻す
+                    throw $exception;           //例外を投げる（例外を知らせる）例外メッセージの取得はExceptionのgetMessage();
+        }
+        return redirect('sales_period_index');
+    }
+
+
+    //指定チケット登録
+    public function sales_period_specialized_create(sales_period_specialized $request){
+
+
+        $tables02 = new table02;
+        $tables07 = new table07;
+
+        DB::beginTransaction();
+        try{
+            //tables02
+            //事業者IDID
+            $tables02->biz_id=1;
+            //商品番号
+            $tables02->ticket_code=$request->ticket_code;
+            //販売期間 開始日時と時間　." ". は間に空白を入れないと　書式があわなくなるため 2021-10-11 10:10:10 の中心空白部分
+            $tables02->sales_interval_start=$request->sales_interval_start_date." ".$request->sales_interval_start_times;
+            $tables02->sales_interval_end=$request->sales_interval_end_date." ".$request->sales_interval_end_times;
+
+
+            //商品番号（ticket_code)＋数字（１から順番につけていく）　tables07でも同様なので　同一名でいくようにしよう！
+            //ticket_code%で数をカウント　複数なければ０　複数あればsales_idの最大値を+1して削除してもsales_idは重複しないようにする。
+            if(DB::table('tables02')
+                ->where('ticket_code','=',$request->ticket_code)
+                //->where('ticket_code','like',"$request->ticket_code"."%")
+                ->get()->count()==0){
+                //同じticket_codeがなければsales_idは１
+                $tables02->sales_id=$tables07->sales_id=1;
+            }else{
+                //同じticket_codeがあれば、sales_idは割り振られているのでmaxをとって＋１していれる
+                $tables02->sales_id=$tables07->sales_id=DB::table('tables02')->max('sales_id')+1;
+            }
+
+            //tables02保存
+            $tables02->save();
+
+            //tables07
+            //事業者ID
+            $tables07->biz_id=1;//固定
+            //商品番号
+            $tables07->ticket_code=$request->ticket_code;
+
+            //指定チケット
+            //チケット利用可能日時（開始） 指定チケットの場合は現在時刻をいれる
+            $tables07->ticket_interval_start=Carbon::now()->toDateTimeString();//Carbon::now()静的メソッド呼び出し　carbon 現在日時
+            //チケット利用可能日時（終了）　carbon::now()+$request->ticket_interval　がはいる
+            $tables07->ticket_interval_end=Carbon::now()->addday($request->ticket_interval)->toDateTimeString();    //toDateTimeString()がフォーマット変換
+            //チケット有効日数　指定の場合　有効期限を格納
+            $tables07->ticket_days=$request->ticket_interval;
+            //チケット販売枚数
+            $tables07->ticket_num=$request->ticket_num;
+            //チケット最小購入枚数
+            $tables07->ticket_min_num=$request->ticket_min_num;
+            //チケット最大購入枚数
+            $tables07->ticket_max_num=$request->ticket_max_num;
+            $tables07->save();
+
+
+            //変更を確定させる まだ曖昧な部分があるので　コミットはまだしない　２０２１年１０月１０日１８：５７
+            DB::commit();               //処理を実行する
+        }catch(Exception $exception){    //catch()で例外クラスを指定する　Exceptionはphpの例外クラス
+            //データ操作を巻き戻す
+            DB::RollBack();             //処理を戻す
+                    throw $exception;           //例外を投げる（例外を知らせる）例外メッセージの取得はExceptionのgetMessage();
+        }
+        return redirect('sales_period_index');
+    }
+
+
+
+
+
+
     //販売期間登録画面
     //validateを使用する際　Requestのデータは引き継げない
     public function sales_period_register($ticket_name){
@@ -643,6 +800,7 @@ class TicketController extends Controller
 
         return view("sales_period_register",compact('table'));
     }
+
 
 
 
