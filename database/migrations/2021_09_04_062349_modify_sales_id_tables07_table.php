@@ -27,7 +27,7 @@ class ModifySalesIdTables07Table extends Migration
     {
         Schema::table('tables07', function (Blueprint $table) {
             //
-            $table->dropUnique("tables07_sales_id_unique");
+            //$table->dropUnique("tables07_sales_id_unique");
         });
     }
 }
