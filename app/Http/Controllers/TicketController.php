@@ -85,17 +85,24 @@ class TicketController extends Controller
     public function sales_period_index(){
 
         /* 販売期間登録 一覧表示へ */
-        $table=DB::table('tables02')
-        ->leftjoin('tables01','tables02.ticket_code','=','tables01.ticket_code')
-        ->join('tables07','tables02.sales_id','=','tables07.sales_id')
-
-
+/*         $table=DB::table('tables07')
+        ->join('tables02','tables07.sales_id','=','tables02.sales_id')
+        ->leftjoin('tables01','tables07.ticket_code','=','tables01.ticket_code')
         ->select(['tables02.id','tables02.biz_id','tables02.ticket_code','tables01.ticket_name','tables02.sales_interval_start','tables02.sales_interval_end','tables07.ticket_num'])
+        ->orderBy('tables01.ticket_name',"asc")
+        ->paginate(10); */
+        $table=DB::table('tables07')
+        ->join('tables02',function($join){  //join複数条件
+            $join->on('tables07.sales_id','=','tables02.sales_id')
+            ->on('tables07.ticket_code','=','tables02.ticket_code');})
+        //->join('tables02','tables07.sales_id','=','tables02.sales_id')
+        ->leftjoin('tables01','tables07.ticket_code','=','tables01.ticket_code')
+        ->select(['tables02.id','tables02.biz_id','tables02.ticket_code','tables01.ticket_name','tables02.sales_interval_start','tables02.sales_interval_end','tables07.ticket_num'])
+        ->orderBy('tables01.ticket_name',"asc")
         ->paginate(10);
         dump($table);
         //一覧表示したらログアウトさせる
         Auth::logout();
-
         return view("sales_period_index",compact('table'));
 
 
