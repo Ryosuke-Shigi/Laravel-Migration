@@ -97,10 +97,10 @@ class TicketController extends Controller
             ->on('tables07.ticket_code','=','tables02.ticket_code');})
         //->join('tables02','tables07.sales_id','=','tables02.sales_id')
         ->leftjoin('tables01','tables07.ticket_code','=','tables01.ticket_code')
-        ->select(['tables02.id','tables02.biz_id','tables02.ticket_code','tables01.ticket_name','tables02.sales_interval_start','tables02.sales_interval_end','tables07.ticket_num'])
+        ->select(['tables02.id','tables02.biz_id','tables02.sales_id','tables02.ticket_code','tables01.ticket_name','tables02.sales_interval_start','tables02.sales_interval_end','tables07.ticket_num'])
         ->orderBy('tables01.ticket_name',"asc")
         ->paginate(10);
-        dump($table);
+
         //一覧表示したらログアウトさせる
         Auth::logout();
         return view("sales_period_index",compact('table'));
@@ -810,6 +810,70 @@ class TicketController extends Controller
     }
 
 
+    //編集画面　販売期間
+    public function update_sales_period($ticket_code,$sales_id){
+        $table=DB::table('tables07')
+        ->join('tables02',function($join){  //join複数条件
+            $join->on('tables07.sales_id','=','tables02.sales_id')
+            ->on('tables07.ticket_code','=','tables02.ticket_code');})
+        ->leftjoin('tables01','tables07.ticket_code','=','tables01.ticket_code')
+        ->where('tables02.sales_id',"=",$sales_id)
+        ->where('tables02.ticket_code',"=",$ticket_code)
+        ->first();
+
+        return view("update_sales_period",compact('table'),compact('ticket_interval'));
+    }
+
+    //編集処理　販売期間
+    public function put_sales_period(REQUEST $request,$ticket_code,$sales_id){
+        //チケットコード
+        $tickets_kind=DB::table('tables01')
+        ->where('ticket_code',"=",$ticket_code)
+        ->first();
+
+        //tables02編集
+        $table=table02::where('sales_id',"=",$sales_id)
+        ->where('ticket_code',"=",$ticket_code)
+        ->first();
+
+        //更新
+        $table->sales_interval_start=$request->sales_interval_start_date." ".$request->sales_interval_start_times;
+        $table->sales_interval_end=$request->sales_interval_end_date." ".$request->sales_interval_end_times;
+        $table->save();
+
+        //tables07編集
+        $table=table07::where('sales_id',"=",$sales_id)
+        ->where('ticket_code',"=",$ticket_code)
+        ->first();
+
+        //フリーチケットであれば
+        if($tickets_kind->tickets_kind==1){
+            //チケット利用可能日時（開始）
+            $table->ticket_interval_start=$request->ticket_interval_start;
+            //チケット利用可能日時（終了）
+            $table->ticket_interval_end=$request->ticket_interval_end;
+            //チケット有効日数
+            $table->ticket_num=$request->ticket_num;
+        }else{  //指定チケット
+            //チケット利用可能日時（開始） 指定チケットの場合は現在時刻をいれる
+            $table->ticket_interval_start=Carbon::now()->toDateTimeString();//Carbon::now()静的メソッド呼び出し　carbon 現在日時
+            //チケット利用可能日時（終了）　carbon::now()+$request->ticket_interval　がはいる
+            $table->ticket_interval_end=Carbon::now()->addday($request->ticket_interval)->toDateTimeString();    //toDateTimeString()がフォーマット変換
+            //チケット有効日数　指定の場合　有効期限を格納
+            $table->ticket_days=$request->ticket_interval;
+        }
+        //チケット販売枚数
+        $table->ticket_num=$request->ticket_num;
+        //チケット最小購入枚数
+        $table->ticket_min_num=$request->ticket_min_num;
+        //チケット最大購入枚数
+        $table->ticket_max_num=$request->ticket_max_num;
+
+        $table->save();
+
+
+        return redirect('sales_period_index');
+    }
 
 
 

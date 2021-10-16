@@ -80,6 +80,8 @@ Route::get('update_types/{ticket_code?}',"TicketController@update_types");
 Route::post('update_types/{ticket_code?}',"TicketController@update_types");
 Route::get('update_all/{ticket_code?}',"TicketController@update_all");
 Route::post('update_all/{ticket_code?}',"TicketController@update_all");
+
+
 //登録
 Route::get("store","TicketController@store");
 Route::post("store","TicketController@store");
@@ -101,6 +103,15 @@ Route::get("sales_period_free_create","TicketController@sales_period_free_create
 Route::post("sales_period_free_create","TicketController@sales_period_free_create");
 Route::get("sales_period_specialized_create","TicketController@sales_period_specialized_create");
 Route::post("sales_period_specialized_create","TicketController@sales_period_specialized_create");
+
+
+//編集画面　販売期間
+Route::get('update_sales_period/{ticket_code?}/{sales_id?}',"TicketController@update_sales_period");
+Route::post('update_sales_period/{ticket_code?}/{sales_id?}',"TicketController@update_sales_period");
+//編集処理　販売期間
+Route::get('put_sales_period/{ticket_code?}/{sales_id?}',"TicketController@put_sales_period");
+Route::post('put_sales_period/{ticket_code?}/{sales_id?}',"TicketController@put_sales_period");
+
 
 //ログイン　追加
 Auth::routes();
