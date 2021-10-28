@@ -810,7 +810,7 @@ class TicketController extends Controller
     }
 
 
-    //編集画面　販売期間
+    //編集画面　販売期間 2021/10/16
     public function update_sales_period($ticket_code,$sales_id){
         $table=DB::table('tables07')
         ->join('tables02',function($join){  //join複数条件
@@ -824,7 +824,8 @@ class TicketController extends Controller
         return view("update_sales_period",compact('table'),compact('ticket_interval'));
     }
 
-    //編集処理　販売期間
+
+    //編集処理　販売期間 2021/10/16
     public function put_sales_period(REQUEST $request,$ticket_code,$sales_id){
         //チケットコード
         $tickets_kind=DB::table('tables01')

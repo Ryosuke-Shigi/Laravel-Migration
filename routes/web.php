@@ -113,6 +113,8 @@ Route::get('put_sales_period/{ticket_code?}/{sales_id?}',"TicketController@put_s
 Route::post('put_sales_period/{ticket_code?}/{sales_id?}',"TicketController@put_sales_period");
 
 
+
+
 //ログイン　追加
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
