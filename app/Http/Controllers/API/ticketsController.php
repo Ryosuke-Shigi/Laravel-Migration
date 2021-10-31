@@ -20,10 +20,14 @@ class ticketsController extends Controller
         if(!isset($request->sales_day)
              || !isset($request->num )
              || !isset($request->page)){
-            $values['status']=-1;
+            $error=array('status'=>-1,'error_message'=>array());
+            if(!isset($request->sales_day)){array_push($error['error_message'],"sales_dayは必須です");};
+            if(!isset($request->num)){array_push($error['error_message'],"numは必須です");};
+            if(!isset($request->page)){array_push($error['error_message'],"pageは必須です");};
+            return $error;
         }else{
             //選択した時間をcarbonをつかって書式を統一する
-            $selectTime=new Carbon($request->sales_day);
+            $selectTime=new Carbon($request->sales_day);//これで2021-10-01 を2021-10-01 00:00:00の形に
             //table01,02,03
             $tables=DB::table('tables01')
             ->join('tables02','tables01.ticket_code','=','tables02.ticket_code')
@@ -62,7 +66,7 @@ class ticketsController extends Controller
                         //空の配列を用意
                         $typevalue=array();
                         //type_nameとtype_moneyをまとめ
-                        $typevalue+=array("type_name"=>$t03->contents_data,);
+                        $typevalue+=array("type_name"=>$t03->contents_data);
                         //ticket_contentsにいれる　　をあるだけ繰り返して挿入する
                         array_push($temp['ticket_contents'],$typevalue);
                     }
@@ -73,7 +77,7 @@ class ticketsController extends Controller
                         //空の配列を用意
                         $typevalue=array();
                         //type_nameとtype_moneyをまとめ
-                        $typevalue+=array("type_name"=>$t05->type_name,);
+                        $typevalue+=array("type_name"=>$t05->type_name);
                         $typevalue+=array("type_money"=>$t05->type_money);
                         //ticket_typesにいれる　　をあるだけ繰り返して挿入する
                         array_push($temp['ticket_types'],$typevalue);
