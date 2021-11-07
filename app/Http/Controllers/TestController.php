@@ -17,7 +17,6 @@ class TestController extends Controller
     }
     public function Answer(Request $request){
         $Score=$request->Score;
-        dump($Score);
         return view("Answer",compact("Score"));
     }
     public function Answer2(Request $request){
