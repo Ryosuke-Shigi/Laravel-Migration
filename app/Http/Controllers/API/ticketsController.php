@@ -131,6 +131,12 @@ class ticketsController extends Controller
         //チケット販売枚数
         //チケット総購入枚数
 
+
+
+        //現在時間（UNIX）を取得
+        $nowTime = carbon::now()->format('U')*10000000+$request->user_id;
+
+
         //登録作業
         DB::beginTransaction();
         try{
@@ -139,11 +145,16 @@ class ticketsController extends Controller
             $tables09 = new table09;
             $tables10 = new table10;
 
+            //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
+            $tables08->reserve_code = $nowTime;
+            //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
+            $tables09->reserve_code = $nowTime;
+            //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
+            $tables10->reserve_code = $nowTime;
+
             //
             //  tables08 登録
             //
-            //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
-            $tables08->reserve_code = carbon::now()->format('U')*10000000+$request->user_id;
             $tables08->biz_id = $request->biz_id;
             $tables08->ticket_code = $request->ticket_code;
             $tables08->sales_id = $request->sales_id;
@@ -167,8 +178,6 @@ class ticketsController extends Controller
             //
             //  tables09 登録
             //
-            //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
-            $tables09->reserve_code = carbon::now()->format('U')*10000000+$request->user_id;
 
             //$tables09->svc_id =
             //$tables09->svc_name =
@@ -190,8 +199,7 @@ class ticketsController extends Controller
             //
             //  tables10 登録
             //
-            //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
-            $tables10->reserve_code = carbon::now()->format('U')*10000000+$request->user_id;
+
             //$tables10->type_id =
             //$tables10->type_money =
             //$tables10->buy_num =
@@ -200,18 +208,15 @@ class ticketsController extends Controller
             //$tables10->save();
 
 
-            //$tables10->save();
-
             dump($tables08);
 
             DB::commit();
+            return array('status'=>0,'reserve_code'=>$nowTime);
         }catch(Exception $exception){
             DB::RollBack();
-            throw $exception;//例外を投げる
+            //throw $exception;//例外を投げる
+            return array('status'=>-1,'error_message'=>"登録エラー");
         }
-
-
-        return array('status'=>0);
     }
 
 
