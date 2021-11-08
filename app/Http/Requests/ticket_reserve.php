@@ -67,6 +67,7 @@ class ticket_reserve extends FormRequest
         $response['error_message']  = $validator->errors()->toArray();
 
         throw new HttpResponseException(
+            //422エラー　紹介・処理リクエストの際に　必須パラメータが抜けている・default値と不一致・正しい入力値ではない場合
             response()->json( $response, 422 )
         );
     }
