@@ -37,10 +37,10 @@ class ticket_reserve extends FormRequest
             'sales_id'=>['required','integer'],
             'interval_start'=>['required','string'],
             //連想配列バリデーション
-            'ticket_types'=>['required'],
-            'ticket_types.type_id'=>['required','integer'],
-            'ticket_types.type_money'=>['required','integer'],
-            'ticket_types.buy_num'=>['required','integer']
+            //'ticket_types'=>['required'],
+            'ticket_types.*.type_id'=>['required','integer'],
+            'ticket_types.*.type_money'=>['required','integer'],
+            'ticket_types.*.buy_num'=>['required','integer']
         ];
     }
 

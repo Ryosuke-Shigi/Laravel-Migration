@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class table10 extends Model
 {
     //
-    protected $table='talbes10';
+    protected $table='tables10';
 }
