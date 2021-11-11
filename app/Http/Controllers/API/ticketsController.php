@@ -126,95 +126,224 @@ class ticketsController extends Controller
             return $error;
         }
 
-        //合計の出し方
-        //$total=DB::table('tables08')->sum('ticket_total_num');
-        //チケット販売枚数
-        //チケット総購入枚数
+        //m_ticket_intervals（tables07）
+        //tables07 [biz_id][ticket_code][sales_id][ticket_interval_start]が同一のものが存在するか確認
+
+        if(!DB::table('tables07')
+                ->where('biz_id','=',$request->biz_id)
+                ->where('ticket_code','=',$request->ticket_code)
+                ->where('sales_id','=',$request->sales_id)
+                ->where('ticket_interval_start','=',$request->interval_start)->exists()){
+            array_push($error['error_message'],"non user tables07 m_ticket_intervals");
+            return $error;
+        }
 
 
 
-        //現在時間（UNIX）を取得
-        $nowTime = carbon::now()->format('U')*10000000+$request->user_id;
+        //dump($request->ticket_types[0]['type_id']);
+        //m_tickets_types(tables05)
+        //tables05[biz_Id][ticket_code][type_id]　同一存在確認
+        /*
+            これは変数にひとまず条件から保存して　foreachでticket_types[]部分を回す方法も考えるべき
+            複数あった場合の対応として
+            $temp=DB::table('tables05')
+                ->where('biz_id','=',$request->biz_id)
+                ->where('ticket_code','=',$request->ticket_code);
+        */
+        foreach($request->ticket_types as $temp){
+            if(!DB::table('tables05')
+                ->where('biz_id','=',$request->biz_id)
+                ->where('ticket_code','=',$request->ticket_code)
+                ->where('type_id','=',$temp['type_id'])->exists()){
+                array_push($error['error_message'],"non user tables05 m_tickets_types");
+                return $error;
+            }
+        }
 
+
+
+        //m_ticket_reserves（tables08）
+        //tables08[biz_id][ticket_code][sales_id][ticket_interval_start]より集約　それらのticket_total_numの合計値を出す
+        $ticket_total_num = DB::table('tables08')
+            ->where('biz_id','=',$request->biz_id)
+            ->where('ticket_code','=',$request->ticket_code)
+            ->where('sales_id','=',$request->sales_id)
+            ->where('ticket_interval_start','=',$request->interval_start)->sum('ticket_total_num');
+
+
+        //m_ticket_intervals（tables07）
+        //tables07[biz_id][ticket_code][sales_id][ticket_interval_start]より集約　それらのticket_total_numの合計値を出す
+        //ticket_numを取得
+        $ticket_num=DB::table('tables07')
+            ->where('biz_id','=',$request->biz_id)
+            ->where('ticket_code','=',$request->ticket_code)
+            ->where('sales_id','=',$request->sales_id)
+            ->where('ticket_interval_start','=',$request->interval_start)->first()->ticket_num;
+
+        //購入枚数がチケット販売枚数＋チケット層購入枚数よりも少ないことを確認　大きければエラーを返す
+        /*
+            これも同時に複数で叩かれた場合に対応を考える必要があります
+            buy_numの合計を出して、それを購入枚数と考えて処理するべき？
+        */
+        //buy_numの合計値を出す
+        $buy_num_total=0;
+        foreach($request->ticket_types as $temp){
+            $buy_num_total+=$temp['buy_num'];
+        }
+        //合計値が残数を超えている場合　エラーを出す
+        if($buy_num_total > $ticket_num+$ticket_total_num){
+            array_push($error['error_message'],"チケットの残り枚数が、全件分ありません");
+            return $error;
+        }
+
+        //リクエストの単価が正しいものを送信しているか確認
+        //m_ticket_types(tables05)->type_money（単価）が requestのtype_moneyと同一か確認
+        //[biz_id][ticket_code][sales_id]
+        foreach($request->ticket_types as $temp){
+            if($temp['type_money']
+                != DB::table('tables05')
+                ->where('biz_id','=',$request->biz_id)
+                ->where('ticket_code','=',$request->ticket_code)
+                ->where('type_id','=',$temp['type_id'])->first()->type_money){
+                    array_push($error['error_message'],"金額が異なります");
+                    return $error;
+                }
+        }
+
+        //販売期間内にあるかを確認
+        //unixtimeより販売開始と販売終了の間であればよい
+        //それぞれでエラー文を返すため、一つずつ判断する
+        //m_sales_intervals(tables02)より　sales_interval_start（販売開始期間）
+        //m_sales_intervals(tables02)より　sales_interval_end(販売終了期間)
+        $tables02 = DB::table('tables02')
+                    ->where('biz_id','=',$request->biz_id)
+                    ->where('ticket_code','=',$request->ticket_code)
+                    ->where('sales_id','=',$request->sales_id)->first();
+        //比較用の時間（unix)取得
+        $sales_interval_start = carbon::create($tables02->sales_interval_start)->format('U');
+        $sales_interval_end   = carbon::create($tables02->sales_interval_end)->format('U');
+
+        $nowTime = array();
+        foreach($request->ticket_types as $index => $value){
+            array_push($nowTime,carbon::now()->format('U')+$index);
+        }
+        $ticket_buy_day = carbon::now();
+
+        //dump("現在".$nowTime."　開始：".$sales_interval_start."　終了：".$sales_interval_end);
+        //販売開始前
+        foreach($nowTime as $value){
+            if($value < $sales_interval_start){
+                array_push($error['error_message'],"販売開始前です");
+                return $error;
+            }
+            //販売開始後
+            if($value > $sales_interval_end){
+                array_push($error['error_message'],"販売期間を終了しています");
+                return $error;
+            }
+        }
+        //reserve_code作成
+        $reserv_code = array();
+        foreach($nowTime as $index=>$value){
+            array_push($reserv_code,$value*10000000+$request->user_id);
+        }
+        //$reserv_code = $nowTime->format('U')*10000000+$request->user_id;
 
         //登録作業
         DB::beginTransaction();
         try{
-            //テーブル宣言
-            $tables08 = new table08;
-            $tables09 = new table09;
-            $tables10 = new table10;
 
-            //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
-            $tables08->reserve_code = $nowTime;
-            //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
-            $tables09->reserve_code = $nowTime;
-            //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
-            $tables10->reserve_code = $nowTime;
+            //登録時：必要データ格納テーブル
+            $m_tables01 = DB::table('tables01')
+                        ->where('biz_id','=',$request->biz_id)
+                        ->where('ticket_code','=',$request->ticket_code)->first();
+            $m_tables06 = DB::table('tables06')
+                        ->where('biz_id','=',$request->biz_id)
+                        ->where('ticket_code','=',$request->ticket_code)->first();
+            $m_tables07 = DB::table('tables07')
+                        ->where('biz_id','=',$request->biz_id)
+                        ->where('ticket_code','=',$request->ticket_code)
+                        ->where('sales_id','=',$request->sales_id)->first();
+
 
             //
             //  tables08 登録
             //
-            $tables08->biz_id = $request->biz_id;
-            $tables08->ticket_code = $request->ticket_code;
-            $tables08->sales_id = $request->sales_id;
-            $tables08->user_id = $request->user_id;
 
-            //$tables08->ticket_name =
-            //$tables08->tickets_kind =
-            //$tables08->ticket_buyday =
-            //$tables08->ticket_interval_start =
-            //$tables08->ticket_interval_end =
-            //$tables08->ticket_start =
-            //$tables08->ticket_end =
-            //$tables08->ticket_total_num =
-            //$tables08->cancel_limit_start =
+            foreach($request->ticket_types as $index => $temp){
+                $tables08 = new table08;
+                //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
+                $tables08->reserv_code = $reserv_code[$index];
+                $tables08->biz_id = $request->biz_id;
+                $tables08->ticket_code = $request->ticket_code;
+                $tables08->sales_id = $request->sales_id;
+                $tables08->user_id = $request->user_id;
+                $tables08->ticket_name = $m_tables01->ticket_name;
+                $tables08->tickets_kind = $m_tables01->tickets_kind;
+                $tables08->ticket_buyday = $ticket_buy_day;
+                $tables08->ticket_interval_start = $m_tables07->ticket_interval_start;
+                $tables08->ticket_interval_end = $m_tables07->ticket_interval_end;
+                $tables08->ticket_start = $m_tables07->ticket_interval_start;
+                $tables08->ticket_end = $m_tables07->ticket_interval_end;
+                //購入枚数？？　複数でリクエストがあった場合はトータルをforeachで合計して出すようにしなくてはいけない
+                $tables08->ticket_total_num = $temp['buy_num'];
+                $tables08->cancel_limit_start = $m_tables07->ticket_interval_end;
+                //2021/11/11確認：チケットの有効日時（終了）を入れる
+                $tables08->cancel_end = $m_tables07->ticket_interval_end;
+                $tables08->ticket_status = 0;            //0固定
 
-            //0を固定
-            $tables08->ticket_status = 0;
-            //$tables08->save()
+                $tables08->save();
+            }
 
 
             //
             //  tables09 登録
             //
-
-            //$tables09->svc_id =
-            //$tables09->svc_name =
-            //$tables09->svc_type =
-            //$tables09->svc_select_type =
-            //0を固定
-            $tables09->select_btn_id = 0;
-            //$tables09->usage_time =
-            //0を固定
-            $tables09->svc_status = 0;
-            //NULL
-            $tables09->svc_start = NULL;
-            $tables09->svc_end = NULL;
-
-            //$tables09->save();
-
+            foreach($request->ticket_types as $index => $temp){
+                $tables09 = new table09;
+                //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
+                $tables09->reserv_code = $reserv_code[$index];
+                $tables09->svc_id = $m_tables06->svc_id;
+                $tables09->svc_name = $m_tables06->svc_name;
+                $tables09->svc_type = $m_tables06->svc_type;
+                $tables09->svc_select_type = $m_tables06->svc_select_type;
+                //2021/11/10 tables09にselect_btn_id追加
+                $tables09->select_btn_id = 0;
+                $tables09->usage_time = $m_tables06->usage_time;
+                $tables09->svc_status = 0;            //0を固定
+                $tables09->svc_start = NULL;          //NULL固定
+                $tables09->svc_end = NULL;            //NULL固定
+                $tables09->save();
+            }
 
 
             //
             //  tables10 登録
             //
 
-            //$tables10->type_id =
-            //$tables10->type_money =
-            //$tables10->buy_num =
-            //$tables10->cancel_money
+            foreach($request->ticket_types as $index => $temp){
+                $tables10 = new table10;
+                //予約番号　現在日時（unix時間)と予約者番号で作成　１７桁０埋
+                $tables10->reserv_code = $reserv_code[$index];
+                $tables10->type_id = $temp['type_id'];
+                $tables10->type_money = $temp['type_money'];
+                $tables10->buy_num = $temp['buy_num'];
+                $m_tables05 = DB::table('tables05')
+                ->where('biz_id','=',$request->biz_id)
+                ->where('ticket_code','=',$request->ticket_code)
+                ->where('type_id','=',$temp['type_id'])->first();
+                $tables10->cancel_money = round($temp['type_money']*($m_tables05->cancel_rate/100));
+                //tables10のtype_name 念のため　tables05のものを入れています　※エラーがおきるため
+                $tables10->type_name = $m_tables05->type_name;
 
-            //$tables10->save();
-
-
-            dump($tables08);
+                $tables10->save();
+            }
 
             DB::commit();
-            return array('status'=>0,'reserve_code'=>$nowTime);
+            return array('status'=>0,'reserve_code'=>$reserv_code);
         }catch(Exception $exception){
             DB::RollBack();
-            //throw $exception;//例外を投げる
+            //throw $exception;//例外を投げる ここで処理が終わる
             return array('status'=>-1,'error_message'=>"登録エラー");
         }
     }
