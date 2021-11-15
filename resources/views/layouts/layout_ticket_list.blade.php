@@ -16,9 +16,11 @@
             <form method="post">
             @csrf
                 <div class="buttonsection">
-                    @foreach($list as $index)
-                        <button type="submit" class="btn" formaction="../ticket_list/{{ $index['ticket_name'] }}">{{ $index['ticket_name'] }}</button>
-                    @endforeach
+                    @foreach($list as $index=>$value)
+                        @if($index==0 || $value['ticket_name']!=$list[$index-1]['ticket_name'])
+                            <button type="submit" class="btn" formaction="../ticket_list/{{ $value['ticket_name'] }}">{{ $value['ticket_name'] }}</button>
+                        @endif
+                        @endforeach
                 </div>
             </form>
     </div>
