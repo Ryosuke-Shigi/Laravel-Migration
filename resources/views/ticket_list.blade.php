@@ -9,7 +9,7 @@
 @extends('layouts.layout_ticket_list')
 
 <!--コンテンツの表　タイトル-->
-<?php $tabletitles=array("biz_id","ticket_code","ticket_name","type_contents","ticket_types"); ?>
+<?php $tabletitles=array("sales_id","ticket_code","ticket_name","type_contents","ticket_types"); ?>
 
 @section('title')
 販売期間
@@ -34,7 +34,7 @@
                 @foreach($list as $index)
                 @if($ticket_name==$index['ticket_name'])
                     <tr>
-                        <td class="itemtd">{{ $index['biz_id'] }}</td>
+                        <td class="itemtd">{{ $index['sales_id'] }}</td>
                         <td class="itemtd">{{ $index['ticket_code'] }}</td>
                         <td class="itemtd">{{ $index['ticket_name'] }}</td>
                         <td class="itemtd">
