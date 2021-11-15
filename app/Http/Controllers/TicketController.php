@@ -118,7 +118,7 @@ class TicketController extends Controller
         //$nowTime = carbon::now()->format('Y_m_d');//現在の年月日を抽出
         $nowTime = "2021-10-01";//テスト用
         $client = new Client();
-        $url = "http://127.0.0.1:8080/api/ticket_list";
+        $url = "http://127.0.0.1:8080/api/tickets";
         //$response = $client->request('GET',$url);
         $response = $client->request('GET',$url,[
                                         'query'=>[
@@ -141,7 +141,7 @@ class TicketController extends Controller
         //$nowTime = carbon::now()->format('Y_m_d');//現在の年月日を抽出
         $nowTime = "2021-10-01";//テスト用
         $client = new Client();
-        $url = "http://127.0.0.1:8080/api/ticket_list";
+        $url = "http://127.0.0.1:8080/api/tickets";
         //$response = $client->request('GET',$url);
 
         $response = $client->request('GET',$url,[
