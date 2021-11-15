@@ -61,6 +61,13 @@ Route::post("index","TicketController@index");
 //販売期間登録画面
 Route::get("sales_period_index","TicketController@sales_period_index");
 Route::post("sales_period_index","TicketController@sales_period_index");
+
+//チケット一覧表示画面
+Route::get("ticket_list","TicketController@ticket_list_init");
+Route::post("ticket_list","TicketController@ticket_list_init");
+Route::get("ticket_list/{ticket_name}","TicketController@ticket_list");
+Route::post("ticket_list/{ticket_name}","TicketController@ticket_list");
+
 //新規登録画面
 Route::get("create","TicketController@create");
 Route::post("create","TicketController@create");

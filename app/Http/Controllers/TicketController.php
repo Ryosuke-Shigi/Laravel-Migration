@@ -18,6 +18,9 @@ use Auth;
 //日時関係で使用　２０２１年１０月１０日追加
 use Carbon\Carbon;
 
+//guzzle ｗｅｂＡＰＩを叩く
+use GuzzleHttp\Client;
+
 
 use App\Models\table01;
 use App\Models\table02;
@@ -31,9 +34,7 @@ use App\Models\table07;
 use App\Rules\sales_period_free_rule;
 //指定チケット時のvalidation rule
 use App\Rules\sales_period_specialized_rule;
-
-
-
+use Facade\FlareClient\Http\Client as HttpClient;
 
 class TicketController extends Controller
 {
@@ -107,6 +108,61 @@ class TicketController extends Controller
 
 
     }
+
+
+
+
+    //チケット一覧表示(初期画面)
+    public function ticket_list_init(){
+
+        //$nowTime = carbon::now()->format('Y_m_d');//現在の年月日を抽出
+        $nowTime = "2021-10-01";//テスト用
+        $client = new Client();
+        $url = "http://127.0.0.1:8080/api/ticket_list";
+        //$response = $client->request('GET',$url);
+        $response = $client->request('GET',$url,[
+                                        'query'=>[
+                                            'sales_day'=>$nowTime,
+                                            'num'=>4,
+                                            'page'=>1,
+                                            ]
+                                        ]);
+        $list=$response->getBody();
+        //Jsonデータにデコードする
+        $list=json_decode($list,true);
+        $list=$list['tickets'];
+        dump($list);
+        return view("ticket_list_init",compact('list'));
+    }
+
+    //チケット一覧表示(初期画面)
+    public function ticket_list(REQUEST $request){
+
+        //$nowTime = carbon::now()->format('Y_m_d');//現在の年月日を抽出
+        $nowTime = "2021-10-01";//テスト用
+        $client = new Client();
+        $url = "http://127.0.0.1:8080/api/ticket_list";
+        //$response = $client->request('GET',$url);
+
+        $response = $client->request('GET',$url,[
+                                        'query'=>[
+                                            'sales_day'=>$nowTime,
+                                            'num'=>4,
+                                            'page'=>1,
+                                            ]
+                                        ]);
+        $list=$response->getBody();
+        //Jsonデータにデコードする
+        $list=json_decode($list,true);
+        $list=$list['tickets'];
+        $ticket_name = $request->ticket_name;
+        return view("ticket_list",compact('list'),compact('ticket_name'));
+    }
+
+
+
+
+
 
     /*販売期間登録　商品番号選択画面*/
     public function sales_period(){
