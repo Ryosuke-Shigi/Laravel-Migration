@@ -21,6 +21,7 @@ abstract class BaseController extends Controller
                 $msg = "エラーメッセージ";
                 break;
             default:
+                $msg = "登録エラー";
                 break;
         }
 

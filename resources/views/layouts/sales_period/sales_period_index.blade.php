@@ -17,6 +17,7 @@
                 <div class="buttonsection">
                     <button type="submit" class="btn" formaction="index">チケット登録</button>
                     <button type="submit" class="btn" formaction="sales_period_index">販売期間登録</button>
+                    <button type="submit" class="btn" formaction="ticket_list">チケット一覧</button>
                 </div>
             </form>
     </div>

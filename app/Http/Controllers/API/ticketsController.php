@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\BaseController;
 use Illuminate\Http\Request;
+
+//validation
 use App\Http\Requests\ticket_reserve;
 
 use Illuminate\Support\Facades\DB;
@@ -12,18 +15,17 @@ use carbon\Carbon;
 use App\Models\table08;
 use App\Models\table09;
 use App\Models\table10;
+use Dotenv\Regex\Success;
 
 class ticketsController extends BaseController
 {
 
     //webAPI　re:チケット情報
     public function sales_interval(REQUEST $request){
-        //返し値用配列
+        //返し値用配列 basecontrollerを使う場合　必要なし
         $values=array('status'=>0,'total_num'=>0,'tickets'=>array());
         //選択した時間をcarbonをつかって書式を統一する
         $selectTime=new Carbon($request->sales_day);//これで2021-10-01 を2021-10-01 00:00:00の形に
-
-
 
         //件数カウント
         $tablenum=DB::table('tables02')
@@ -49,8 +51,6 @@ class ticketsController extends BaseController
             //table01,02,03
             $tables=DB::table('tables01')
             ->join('tables02','tables01.ticket_code','=','tables02.ticket_code')
-            //->join('tables03','tables01.ticket_code','=','tables03.ticket_code')
-            //->join('tables05','tables01.ticket_code','=','tables05.ticket_code')
             ->select(['tables01.id','tables02.biz_id','tables02.ticket_code','tables02.sales_id','tables01.ticket_name','tables02.sales_interval_start','tables02.sales_interval_end'])
             //条件：選択した時間がstartからendの間にある
             ->whereDate('sales_interval_start','<=',$selectTime->todatetimestring())//"日付の条件をつける"   いつから
@@ -185,11 +185,14 @@ class ticketsController extends BaseController
             これも同時に複数で叩かれた場合に対応を考える必要があります
             buy_numの合計を出して、それを購入枚数と考えて処理するべき？
         */
-        //buy_numの合計値を出す
+
+
+        //buy_numの合計値を出す(type_idは問わない　購入の全ての合計枚数で確認)
         $buy_num_total=0;
         foreach($request->ticket_types as $temp){
             $buy_num_total+=$temp['buy_num'];
         }
+
         //合計値が残数を超えている場合　エラーを出す
         if($buy_num_total > $ticket_num+$ticket_total_num){
             array_push($error['error_message'],"チケットの残り枚数が、全件分ありません");
@@ -327,13 +330,25 @@ class ticketsController extends BaseController
 
                 $tables10->save();
             }
+            DB::RollBack();
 
-            DB::commit();
-            return array('status'=>0,'reserve_code'=>$reserv_code);
+            $test = DB::table('tables02');
+            //$test->get();
+            //dump($test);
+            //$test->where('id','=',1)->first();
+            //dump($test);
+            dump($test->get());
+            dump($test->where('id','=',7)->first());
+            dump($test->get());
+
+            //DB::commit();
+            //return array('status'=>0,'reserve_code'=>$reserv_code);
+            return $this->_success(array('reserv_code'=>$reserv_code));
         }catch(Exception $exception){
             DB::RollBack();
             //throw $exception;//例外を投げる ここで処理が終わる
-            return array('status'=>-1,'error_message'=>"登録エラー");
+            //return array('status'=>-1,'error_message'=>"登録エラー");
+            return $this->_error(0);
         }
     }
 
