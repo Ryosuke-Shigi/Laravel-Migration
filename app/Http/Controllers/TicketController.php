@@ -115,6 +115,7 @@ class TicketController extends Controller
     //チケット一覧表示(初期画面)
     public function ticket_list_init(){
 
+        //チケットネームが欲しかったのでwebAPIを呼び出している
         //$nowTime = carbon::now()->format('Y_m_d');//現在の年月日を抽出
         $nowTime = "2021-10-01";//テスト用
         $client = new Client();
@@ -131,19 +132,21 @@ class TicketController extends Controller
         //Jsonデータにデコードする
         $list=json_decode($list,true);
         $list=$list['tickets'];
-        dump($list);
+
         return view("ticket_list_init",compact('list'));
     }
 
+    //別のAPIを呼び出して、ticket_codeでさらに絞ったものをリストにするためのデータを送る
     //チケット一覧表示(初期画面)
     public function ticket_list(REQUEST $request){
 
+        //チケット名を取り出すだけのような形
         //$nowTime = carbon::now()->format('Y_m_d');//現在の年月日を抽出
         $nowTime = "2021-10-01";//テスト用
         $client = new Client();
         $url = "http://127.0.0.1:8080/api/tickets";
         //$response = $client->request('GET',$url);
-
+        //dump($request->ticket_code);
         $response = $client->request('GET',$url,[
                                         'query'=>[
                                             'sales_day'=>$nowTime,
@@ -155,8 +158,28 @@ class TicketController extends Controller
         //Jsonデータにデコードする
         $list=json_decode($list,true);
         $list=$list['tickets'];
-        $ticket_name = $request->ticket_name;
-        return view("ticket_list",compact('list'),compact('ticket_name'));
+
+
+        //ticket_codeで絞るapiを呼び出しデータを取得する
+        $client2 = new Client();
+        $url = "http://127.0.0.1:8080/api/tickets_ticket_code";
+        //$response = $client->request('GET',$url);
+        //dump($request->ticket_code);
+        $response2 = $client2->request('GET',$url,[
+                                        'query'=>[
+                                            'sales_day'=>$nowTime,
+                                            'num'=>10,
+                                            'page'=>1,
+                                            'ticket_code'=>$request->ticket_code
+                                            ]
+                                        ]);
+        $list2=$response2->getBody();
+        //Jsonデータにデコードする
+        $list2=json_decode($list2,true);
+        $list2=$list2['tickets'];
+
+        //listは名前のボタン用　list2はticket_codeで絞ったデータ
+        return view("ticket_list",compact('list'),compact('list2'));
     }
 
 
