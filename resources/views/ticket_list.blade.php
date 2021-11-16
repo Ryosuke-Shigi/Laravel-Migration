@@ -31,8 +31,7 @@
                 @endforeach
 
                 <!-- 表の中 -->
-                @foreach($list as $index)
-                @if($ticket_name==$index['ticket_name'])
+                @foreach($list2 as $index)
                     <tr>
                         <td class="itemtd">{{ $index['sales_id'] }}</td>
                         <td class="itemtd">{{ $index['ticket_code'] }}</td>
@@ -48,7 +47,6 @@
                             @endforeach
                         </td>
                     </tr>
-                @endif
                 @endforeach
         </table>
 </div>

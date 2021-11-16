@@ -16,11 +16,26 @@
             <form method="post">
             @csrf
                 <div class="buttonsection">
+                    @php $flg=false; @endphp
                     @foreach($list as $index=>$value)
-                        @if($index==0 || $value['ticket_name']!=$list[$index-1]['ticket_name'])
-                            <button type="submit" class="btn" formaction="../ticket_list/{{ $value['ticket_name'] }}">{{ $value['ticket_name'] }}</button>
+
+                        @if($loop->first)
+                            <!-- 一番最初は同じボタンなどないので　作成 -->
+                            <button type="submit" class="btn" formaction="../ticket_list/{{ $value['ticket_code'] }}">{{ $value['ticket_name'] }}</button>
+                        @else
+                            <!-- これ以前に　同名でボタンを作っていないか確認する -->
+                            @for($i=0;$i<$index;$i++)
+                                <!--もし同名であれば　ボタンを作らずfor文を抜ける-->
+                                @if($value['ticket_name']==$list[$i]['ticket_name'])
+                                    @break;
+                                @endif
+                                <!-- 上記条件にひっかからずラストまで来たら、同じチケット名はないので　ボタンをつくる -->
+                                @if($i==$index-1)
+                                    <button type="submit" class="btn" formaction="../ticket_list/{{ $value['ticket_code'] }}">{{ $value['ticket_name'] }}</button>
+                                @endif
+                            @endfor
                         @endif
-                        @endforeach
+                    @endforeach
                 </div>
             </form>
     </div>
