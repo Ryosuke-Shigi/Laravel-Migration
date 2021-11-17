@@ -112,7 +112,6 @@ class ticketsController extends BaseController
 
 
     //チケット予約
-    //Validation使用
     public function ticket_reserve(ticket_reserve $request){
         //dump($request->user_id);
         //dump($request->ticket_types['type_id']);

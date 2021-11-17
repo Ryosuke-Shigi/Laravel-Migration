@@ -136,6 +136,11 @@ class TicketController extends Controller
         return view("ticket_list_init",compact('list'));
     }
 
+
+
+
+
+
     //別のAPIを呼び出して、ticket_codeでさらに絞ったものをリストにするためのデータを送る
     //チケット一覧表示(初期画面)
     public function ticket_list(REQUEST $request){
@@ -954,6 +959,49 @@ class TicketController extends Controller
 
         return redirect('sales_period_index');
     }
+
+
+
+
+
+
+
+    //webAPIをPOST送信 登録入力画面
+    public function view_ticket_reserve(REQUEST $request){
+        return view("ticket_reserve");
+    }
+
+
+    //webAPIをPOST送信　登録処理
+    public function ticket_reserve(REQUEST $request){
+
+
+        $client = new Client();
+        $url = 'http://127.0.0.1:8080/api/tickets/reserve';
+
+        $param=array('user_id'=>$request->user_id,
+                    'biz_id'=>$request->biz_id,
+                    'ticket_code'=>$request->ticket_code,
+                    'sales_id'=>$request->sales_id,
+                    //年月日のみなので　2011-00-00 00:00:00に合わせる
+                    'interval_start'=>Carbon::parse($request->interval_start)->toDateTimeString(),
+                    'ticket_types'=>array());
+        foreach($request->type_id as $index=>$value){
+            array_push($param['ticket_types'],array('type_id'=>$request->type_id[$index],
+                                                    'type_money'=>$request->type_money[$index],
+                                                    'buy_num'=>$request->buy_num[$index]));
+        }
+
+        $response = $client->request('POST',$url,['json'=>$param]);
+
+        //返り値を受け取る！
+        dump($response->getBody()->getContents());
+
+
+        return redirect('index');
+    }
+
+
 
 
 

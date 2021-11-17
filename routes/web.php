@@ -112,6 +112,15 @@ Route::get("sales_period_specialized_create","TicketController@sales_period_spec
 Route::post("sales_period_specialized_create","TicketController@sales_period_specialized_create");
 
 
+//POSTを使用した登録画面
+Route::get('view_ticket_reserve','TicketController@view_ticket_reserve');
+Route::post('view_ticket_reserve','TicketController@view_ticket_reserve');
+//POSTを使用した登録処理
+Route::get('ticket_reserve','TicketController@ticket_reserve');
+Route::post('ticket_reserve','TicketController@ticket_reserve');
+
+
+
 //編集画面　販売期間
 Route::get('update_sales_period/{ticket_code?}/{sales_id?}',"TicketController@update_sales_period");
 Route::post('update_sales_period/{ticket_code?}/{sales_id?}',"TicketController@update_sales_period");
