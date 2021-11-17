@@ -1,0 +1,174 @@
+@charset "UTF-8";
+
+:root{
+    --item-line-height:40px;
+    --itemname-fontsize:20px;
+    --itemname-fontcolor:black;
+    --itemname-background-color:white;
+
+    --form-backcolor:rgba(255,255,255,0.5);
+  }
+  /* リセット */
+  body, h1,h2,h3,h4,h5,h6,p,ul,li,figure{
+    margin:0;
+    padding:0;
+    list-style: none;
+  }
+  /*　初期設定　*/
+  body{
+    font-size:15px;
+    font-family:"Noto Sans Jp", sans-serif;
+    box-sizing:border-box;  /*幅と高さに　padding borderを含める*/
+    overflow-y:scroll;
+  }
+
+.wrapper{
+    width:100vw;
+    height:auto;
+    display:flex;
+    font-size:15px;
+    background-color:rgba(120,120,120,120);
+    justify-content:center;
+
+}
+
+.container{
+    width:900px;
+    height:auto;
+    background-color:rgb(181, 236, 218);
+    display:flex;
+    flex-wrap:wrap;
+    margin-top:30px;
+}
+
+/*ERRORMESSAGE*/
+.container .errormsg{
+    width:100%;
+    height:20px;
+    color: red;
+    font-size:15px;
+    text-align: center;
+    font-weight: bold;
+    background-color: rgb(214, 171, 185);
+}
+
+/*各項目のタイトル（大）*/
+.container .contenttitle{
+    height:35px;
+    width:100%;
+    display: flex;
+    align-items: center;
+    font-size:var(--itemname-fontsize);
+    color:var(--itemname-fontcolor);
+    background-color:var(--itemname-background-color);
+}
+
+/*複数行用タイトル*/
+.container .itemname_multi{
+    height:var(--item-line-height);
+    width:100%;
+    font-size:15px;
+    display:flex;
+    align-items: center;
+}
+/*１行用タイトル*/
+.container .itemname_line{
+    height:var(--item-line-height);
+    width:20%;
+    font-size:15px;
+    display:flex;
+    align-items: center;
+    background-color: gray;
+    justify-content: center;
+}
+
+
+/*項目入力フィールドを入れる*/
+.container .itemsector{
+    height:var(--item-line-height);
+    width:61%;
+    background-color:white;
+    display:flex;
+    align-items: center;
+}
+
+.container .buttonsector{
+    height:var(--item-line-height);
+    width:19%;
+    background-color:pink;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.container .filebtn{
+    height:80%;
+    width:80%;
+    font-size:15px;
+    color:rgba(0,0,0,0);
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.container .addbtn{
+    height:60px;
+    width:100px;
+    font-size:20px;
+    color:black;
+    text-align: center;
+}
+
+/*　テキストボックスサイズ　*/
+.container .textbox{
+    font-size:25px;
+    height:80%;
+    width:80%;
+    margin-left: 10px;
+}
+
+/*料金スペース*/
+.container .price_section{
+    height:auto;
+    width:100%;
+    display:flex;
+    gap:4px 2px;
+    align-items: center;
+    background-color: aquamarine;
+    flex-wrap: wrap;
+    padding-left: 10px;
+    margin-top:5px;
+    color:black;
+    font-size:25px;
+}
+
+.price_section .item_section{
+    width:28%;
+    height:80px;
+    display:flex;
+    flex-wrap: wrap;
+    align-items:center;
+}
+.item_section .item_name{
+    width:100%;
+    height:10%;
+    font-size:15px;
+}
+.item_section .item_text{
+    height:50%;
+    width:90%;
+}
+
+
+.container .footer{
+    height:60px;
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: cadetblue;
+}
+.footer .button{
+    height:80%;
+    width:250px;
+    font-size: 20px;
+
+}
