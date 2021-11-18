@@ -9,7 +9,7 @@
 @extends('layouts.layout_ticket_list')
 
 <!--コンテンツの表　タイトル-->
-<?php $tabletitles=array("sales_id","ticket_code","ticket_name","type_contents","ticket_types"); ?>
+<?php $tabletitles=array("sales_id","チケット名","チケット紹介内容","注意事項",""); ?>
 
 @section('title')
 販売期間
@@ -21,7 +21,7 @@
 
 @section('content')
 <div class="select_section">
-    <div class="name_section">リスト一覧表示</div>
+    <div class="name_section">チケット一覧</div>
     <div class="listfield">
         <table class = "tableitem">
                 <!-- 一覧表項目 -->
@@ -34,17 +34,20 @@
                 @foreach($list2 as $index)
                     <tr>
                         <td class="itemtd">{{ $index['sales_id'] }}</td>
-                        <td class="itemtd">{{ $index['ticket_code'] }}</td>
                         <td class="itemtd">{{ $index['ticket_name'] }}</td>
                         <td class="itemtd">
-                            @foreach ($index['ticket_contents'] as $value)
-                                {{ $value['type_name'] }}<br>
+                            @foreach ($index['contents_data'] as $value)
+                                {{ $value }}<br>
                             @endforeach
                         </td>
                         <td class="itemtd">
-                            @foreach ($index['ticket_types'] as $value)
-                                {{ $value['type_name'] }}:{{ $value['type_money'] }}<br>
+                            @foreach ($index['cautions_text'] as $value)
+                                {{ $value }}<br>
+                                {{-- <!--{{ $value['type_name'] }}:{{ $value['type_money'] }}<br>--> --}}
                             @endforeach
+                        </td>
+                        <td>
+                            <button></button>
                         </td>
                     </tr>
                 @endforeach

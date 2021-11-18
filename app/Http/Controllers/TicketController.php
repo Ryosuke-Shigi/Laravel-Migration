@@ -119,7 +119,7 @@ class TicketController extends Controller
         //$nowTime = carbon::now()->format('Y_m_d');//現在の年月日を抽出
         $nowTime = "2021-10-01";//テスト用
         $client = new Client();
-        $url = "http://127.0.0.1:8080/api/tickets";
+        $url = "http://127.0.0.1:8080/api/tickets_code_name";
         //$response = $client->request('GET',$url);
         $response = $client->request('GET',$url,[
                                         'query'=>[
@@ -137,10 +137,6 @@ class TicketController extends Controller
     }
 
 
-
-
-
-
     //別のAPIを呼び出して、ticket_codeでさらに絞ったものをリストにするためのデータを送る
     //チケット一覧表示(初期画面)
     public function ticket_list(REQUEST $request){
@@ -149,7 +145,7 @@ class TicketController extends Controller
         //$nowTime = carbon::now()->format('Y_m_d');//現在の年月日を抽出
         $nowTime = "2021-10-01";//テスト用
         $client = new Client();
-        $url = "http://127.0.0.1:8080/api/tickets";
+        $url = "http://127.0.0.1:8080/api/tickets_code_name";
         //$response = $client->request('GET',$url);
         //dump($request->ticket_code);
         $response = $client->request('GET',$url,[
@@ -167,7 +163,7 @@ class TicketController extends Controller
 
         //ticket_codeで絞るapiを呼び出しデータを取得する
         $client2 = new Client();
-        $url = "http://127.0.0.1:8080/api/tickets_ticket_code";
+        $url = "http://127.0.0.1:8080/api/tickets_ticket_code_detail";
         //$response = $client->request('GET',$url);
         //dump($request->ticket_code);
         $response2 = $client2->request('GET',$url,[
