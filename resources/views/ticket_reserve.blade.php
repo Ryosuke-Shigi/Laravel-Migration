@@ -16,7 +16,7 @@
 @csrf
 
 <div class="container">
-    <div class="contenttitle">チケット登録（POST)</div>
+    <div class="contenttitle">チケット購入（POST)</div>
         <div class="itemname_line">user_id</div>
         <div class="itemsector"><input class="textbox" type="text" id="user_id" name="user_id" value="{{ old('ticket_name') }}"></div>
         <div class="itemname_line">biz_id</div>
