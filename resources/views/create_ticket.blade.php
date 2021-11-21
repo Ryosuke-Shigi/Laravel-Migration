@@ -130,7 +130,7 @@
     //
     //  ファイルを選択すると　ファイル名がテキストに表示される
     //
-    //
+    // onchange
     function overview_select(obj){
         document.getElementById('overview_image').value=obj.value;
     }

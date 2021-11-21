@@ -13,4 +13,5 @@
             @yield('contents')
         </div>
     </body>
+    @yield('js')
 </html>

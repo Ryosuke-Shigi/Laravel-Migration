@@ -64,33 +64,3 @@
 @endsection
 
 <!--HTML読込前にjavascript実行に入るとエラーが出る？？　deferを入れるとよい-->
-
-
-<script>
-    //追加ボタンを押したとき
-/*       function addclick(){
-        alert('onore-');
-    }
- */
-    //各ボタンのボタン要素を取得
-    //概要のファイル
-    //
-    //  ファイルを選択すると　ファイル名がテキストに表示される
-    //
-    //
-    function overview_select(obj){
-        document.getElementById('overview_image').value=obj.value;
-    }
-    //詳細の　紹介ファイル
-    function intro_select(obj){
-        document.getElementById('introduction').value=obj.value;
-    }
-    //詳細の　紹介画像ファイル
-    function contents_select(obj){
-        document.getElementById('contents_image').value=obj.value;
-    }
-    //サービスの内容・注意事項のファイル
-    function svc_select(obj){
-        document.getElementById('svc_cautions02').value=obj.value;
-    }
-</script>

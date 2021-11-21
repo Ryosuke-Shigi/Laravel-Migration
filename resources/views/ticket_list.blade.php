@@ -29,7 +29,8 @@
                 @foreach($tabletitles as $index)
                     <td class="titletd">{{ $index }}</td>
                 @endforeach
-
+                <form method="post" enctype="multipart/form-data">
+                @csrf
                 <!-- 表の中 -->
                 @foreach($list2 as $index)
                     <tr>
@@ -46,19 +47,19 @@
                                 {{-- <!--{{ $value['type_name'] }}:{{ $value['type_money'] }}<br>--> --}}
                             @endforeach
                         </td>
-                        <td>
-                            <button></button>
-                        </td>
+                        <td class="itemtd"><button type="submit" formaction="../view_ticket_code_reserve/{{ $index['ticket_code'] }}/{{ $index['sales_id'] }}">購入へ進む</button></td>
                     </tr>
                 @endforeach
+                </form>
         </table>
 </div>
 
 @endsection
 
-<script>
+{{-- <script>
     function ticket_name_select(obj){
         document.ticket_form.action="sales_period_register/"+obj.value;
     }
 
 </script>
+ --}}

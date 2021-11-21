@@ -121,6 +121,20 @@ Route::post('ticket_reserve','TicketController@ticket_reserve');
 
 
 
+
+//POSTを使用した登録画面（枚数のみ選択）
+Route::get('view_ticket_code_reserve/{ticket_code}/{sales_id}','TicketController@view_ticket_code_reserve');
+Route::post('view_ticket_code_reserve/{ticket_code}/{sales_id}','TicketController@view_ticket_code_reserve');
+//POSTを使用した登録（枚数のみ選択）
+Route::get('ticket_code_reserve/{ticket_code}/{sales_id}','TicketController@ticket_code_reserve');
+Route::post('ticket_code_reserve/{ticket_code}/{sales_id}','TicketController@ticket_code_reserve');
+
+
+
+
+
+
+
 //編集画面　販売期間
 Route::get('update_sales_period/{ticket_code?}/{sales_id?}',"TicketController@update_sales_period");
 Route::post('update_sales_period/{ticket_code?}/{sales_id?}',"TicketController@update_sales_period");
