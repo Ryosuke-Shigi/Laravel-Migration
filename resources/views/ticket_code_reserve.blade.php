@@ -27,7 +27,7 @@
 
     <div class="itemname_line">現在価格</div>
     <div class="itemsector"><input class="textbox2" type="text" id="buy_money" name="buy_money" readonly=true>円</div>
-
+    <input type="hidden" name="ticket_interval_start" value={{ $values['ticket_interval_start'] }}>
 
     <!--登録・戻るボタン-->
     <div class="footer">

@@ -33,8 +33,9 @@ class ModifyTicketCodeTables08 extends Migration
         Schema::table('tables08', function (Blueprint $table) {
             //
             //ユニークキーに変更
-            $table->string('ticket_code',5)->unique()->change();
-            $table->integer('sales_id')->unsigned()->unique()->change();
+            $table->unique('ticket_code');
+            $table->unique('sales_id');
+
         });
     }
 }
