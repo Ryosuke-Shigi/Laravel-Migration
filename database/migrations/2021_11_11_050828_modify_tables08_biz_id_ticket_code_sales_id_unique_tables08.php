@@ -31,10 +31,10 @@ class ModifyTables08BizIdTicketCodeSalesIdUniqueTables08 extends Migration
     {
         Schema::table('tables08', function (Blueprint $table) {
             //
-            //複合ユニーク作成
             $table->dropForeign("tables08_biz_id_ticket_code_sales_id_foreign");
             $table->Unique(['biz_id','ticket_code','sales_id']);
             $table->Foreign(['biz_id','ticket_code','sales_id'])->references(['biz_id','ticket_code','sales_id'])->on('tables02')->onUpdate('cascade')->onDelete('cascade');
-        });
+
+       });
     }
 }

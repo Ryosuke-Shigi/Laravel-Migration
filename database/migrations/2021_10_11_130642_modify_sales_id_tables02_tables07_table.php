@@ -35,20 +35,21 @@ class ModifySalesIdTables02Tables07Table extends Migration
      */
     public function down()
     {
-        Schema::table('tables07', function (Blueprint $table) {
-            //
-
-            $table->Unique(['biz_id','ticket_code']);
-            $table->Unique(['sales_id']);
-            $table->dropForeign('tables07_biz_id_ticket_code_sales_id_foreign');
-            $table->dropUnique('biz_id-ticket_start_unique');
-
-        });
         Schema::table('tables02', function (Blueprint $table) {
             //
+
             $table->Unique('sales_id');
             $table->Unique('ticket_code');
         });
+        Schema::table('tables07', function (Blueprint $table) {
+            //
+            $table->dropUnique('biz_id-ticket_start_unique');
+            $table->unique(['biz_id','ticket_code']);
+            $table->unique(['sales_id']);
+
+
+        });
+
 
     }
 }

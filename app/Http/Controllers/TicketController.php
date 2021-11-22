@@ -115,8 +115,9 @@ class TicketController extends Controller
     //チケット一覧表示(初期画面)
     public function ticket_list_init(){
         //チケットネームが欲しかったのでwebAPIを呼び出している
-        //$nowTime = carbon::now()->format('Y_m_d');//現在の年月日を抽出
-        $nowTime = "2021-10-01";//テスト用
+        $nowTime = carbon::now()->format('Y-m-d');//現在の年月日を抽出
+        dump($nowTime);
+        //$nowTime = "2021-10-01";//テスト用
         $client = new Client();
         $url = "http://127.0.0.1:8080/api/tickets_code_name";
         //$response = $client->request('GET',$url);
@@ -140,8 +141,8 @@ class TicketController extends Controller
     //チケット一覧表示(初期画面)
     public function ticket_list(REQUEST $request){
         //チケット名を取り出すだけのような形
-        //$nowTime = carbon::now()->format('Y_m_d');//現在の年月日を抽出
-        $nowTime = "2021-10-01";//テスト用
+        $nowTime = carbon::now()->format('Y-m-d');//現在の年月日を抽出
+        //$nowTime = "2021-10-01";//テスト用
         $client = new Client();
         $url = "http://127.0.0.1:8080/api/tickets_code_name";
         //$response = $client->request('GET',$url);
@@ -157,6 +158,8 @@ class TicketController extends Controller
         //Jsonデータにデコードする
         $list=json_decode($list,true);
         $list=$list['tickets'];
+
+
         //ticket_codeで絞るapiを呼び出しデータを取得する
         $client2 = new Client();
         $url = "http://127.0.0.1:8080/api/tickets_ticket_code_detail";
@@ -174,7 +177,7 @@ class TicketController extends Controller
         //Jsonデータにデコードする
         $list2=json_decode($list2,true);
         $list2=$list2['tickets'];
-
+        dump($list2);
 
         //listは名前のボタン用　list2はticket_codeで絞ったデータ
         return view("ticket_list",compact('list'),compact('list2'));
@@ -186,7 +189,7 @@ class TicketController extends Controller
     //テスト用修正がはいっています　２０２１１１２０
     //枚数選択のみの購入画面作成 20211119
     public function view_ticket_code_reserve($ticket_code,$sales_id){
-        $values = array("tickets"=>array(),'ticket_min_num'=>0,'ticket_max_num'=>0,'ticket_num'=>0);
+        $values = array("tickets"=>array(),'ticket_min_num'=>0,'ticket_max_num'=>0,'ticket_interval_start'=>0,'ticket_num'=>0);
         $ticket_buy_num = 0;    //現在の購入数
 
 
@@ -196,12 +199,13 @@ class TicketController extends Controller
         $response = $client->request('GET',$url,[
                                         'query'=>[
                                             'ticket_code'=>$ticket_code,
-                                            'sales_id'=>$sales_id//（テストのため３にしている）20211020
+                                            'sales_id'=>$sales_id//（テストのため３にしていた）20211020
                                             ]
                                         ]);
         //Jsonデータをデコードする
         //ticket_code と sales_idより　購入されているチケットの枚数を取得
         $ticket_buy_num = json_decode($response->getBody(),true);
+
 
         //ticket_codeとsales_idで　購入済みのチケット数を抽出する
         $client2 = new Client();
@@ -222,6 +226,7 @@ class TicketController extends Controller
         ->first();
         $values['ticket_min_num']=$tables07->ticket_min_num;
         $values['ticket_max_num']=$tables07->ticket_max_num;
+        $values['ticket_interval_start']=$tables07->ticket_interval_start;
         //本来なら不要だが　minとmaxを入力間違えて入れば
         if($values['ticket_min_num'] > $tables07->ticket_max_num){
             $temp = $values['ticket_min_num'];
@@ -229,43 +234,46 @@ class TicketController extends Controller
             $values['ticket_max_num'] = $temp;
         }
         $values['ticket_num']=$tables07->ticket_num;
-
+        dump($values);
         //dump(carbon::now()->format("Y-m-d H:i:s"));//現在日時を2021-11-19 08:02:36でとる
         return view("ticket_code_reserve",compact('values','ticket_code','sales_id'));
     }
+
+
+
     //post
     //20211121
     //購入画面からPOSTで登録
     public function ticket_code_reserve(REQUEST $request,$ticket_code,$sales_id){
         $biz_id = 1;
         $user_id = 1;
-        $interval_start = "2021-11-08 00:00:00";
+        //$interval_start = carbon::now()->format('Y-m-d');
 
         $client = new Client();
         $url = 'http://127.0.0.1:8080/api/tickets/reserve';
-
+        dump($request);
         $param=array('user_id'=>$user_id,
                     'biz_id'=>$biz_id,
                     'ticket_code'=>$ticket_code,
-
-
-                    'sales_id'=>3,//テスト$sales_id
+                    'sales_id'=>$sales_id,
 
 
                     //年月日のみなので　2011-00-00 00:00:00に合わせる
-                    'interval_start'=>Carbon::parse($interval_start)->toDateTimeString(),
+                    'interval_start'=>$request->ticket_interval_start,
+
                     'ticket_types'=>array());
+
+
         foreach($request->type_id as $index=>$value){
             array_push($param['ticket_types'],array('type_id'=>$request->type_id[$index],
                                                     'type_money'=>$request->type_money[$index],
                                                     'buy_num'=>$request->buy_num[$index]));
         }
-        dump($param);
+
         $response = $client->request('POST',$url,['json'=>$param]);
 
         //返り値を受け取る！
         dump($response->getBody()->getContents());
-
 
 
 
