@@ -120,6 +120,9 @@ Route::get('ticket_reserve','TicketController@ticket_reserve');
 Route::post('ticket_reserve','TicketController@ticket_reserve');
 
 
+//チケット購入後　購入ありがとうございました　画面
+Route::get('ticket_thanks','TicketController@ticket_thanks');
+
 
 
 //POSTを使用した登録画面（枚数のみ選択）
