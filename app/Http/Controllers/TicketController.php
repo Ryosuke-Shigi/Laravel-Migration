@@ -116,7 +116,6 @@ class TicketController extends Controller
     public function ticket_list_init(){
         //チケットネームが欲しかったのでwebAPIを呼び出している
         $nowTime = carbon::now()->format('Y-m-d');//現在の年月日を抽出
-        dump($nowTime);
         //$nowTime = "2021-10-01";//テスト用
         $client = new Client();
         $url = "http://127.0.0.1:8080/api/tickets_code_name";
@@ -177,7 +176,7 @@ class TicketController extends Controller
         //Jsonデータにデコードする
         $list2=json_decode($list2,true);
         $list2=$list2['tickets'];
-        dump($list2);
+        //dump($list2);
 
         //listは名前のボタン用　list2はticket_codeで絞ったデータ
         return view("ticket_list",compact('list'),compact('list2'));
@@ -234,8 +233,9 @@ class TicketController extends Controller
             $values['ticket_max_num'] = $temp;
         }
         $values['ticket_num']=$tables07->ticket_num;
-        dump($values);
+        //dump($values);
         //dump(carbon::now()->format("Y-m-d H:i:s"));//現在日時を2021-11-19 08:02:36でとる
+        dump($values);
         return view("ticket_code_reserve",compact('values','ticket_code','sales_id'));
     }
 
@@ -273,15 +273,21 @@ class TicketController extends Controller
         $response = $client->request('POST',$url,['json'=>$param]);
 
         //返り値を受け取る！
-        dump($response->getBody()->getContents());
+        //dump($response->getBody()->getContents());
 
 
 
-        return redirect('index');
+        return view('ticket_thanks');
     }
 
+    //直接記入でのチケット購入画面表示
+    public function view_ticket_reserve(){
+        return view('ticket_reserve');
+    }
 
-
+    public function ticket_thanks(){
+        return view('ticket_thanks');
+    }
 
     //webAPIをPOST送信　登録処理
     public function ticket_reserve(REQUEST $request){
@@ -306,7 +312,7 @@ class TicketController extends Controller
         $response = $client->request('POST',$url,['json'=>$param]);
 
         //返り値を受け取る！
-        dump($response->getBody()->getContents());
+        //dump($response->getBody()->getContents());
 
 
         return redirect('index');
