@@ -164,6 +164,18 @@
     width:90%;
 }
 
+.container .error_message{
+    width:100%;
+    font-size:20px;
+    color:red;
+    background-color:rgba(255, 178, 127, 0.493);
+
+}
+
+.container .buy_num{
+    width:10%;
+    background-color:bisque;
+}
 
 .container .footer{
     height:60px;
