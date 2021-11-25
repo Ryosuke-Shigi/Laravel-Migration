@@ -18,13 +18,19 @@
 <div class="container">
     <div class="contenttitle">sales_id:{{ $sales_id }}　ticket_code:{{ $ticket_code }}　のチケット購入（POST）</div>
     <!-- types -->
-    @foreach($values['tickets'] as $value)
+    @foreach($values['tickets'] as $index=>$value)
         <div class="itemname_line">{{ $value['type_name'] }}</div>
         <div class="itemsector"><input class="textbox" type="text" id="money" name="type_money[]" readonly=true value={{ $value['type_money'] }}>円</div>
-        <input type="number" onchange="sum_money()" class="buy_num" id="buy_num" name="buy_num[]" value={{ $values['ticket_min_num'] }} min={{ $values['ticket_min_num'] }} max={{ $values['ticket_max_num'] }}>
+        <input type="number" onchange="sum_money()" class="buy_num" id="buy_num[]" name="buy_num[]" value={{ old('buy_num.'.$index) }}>
         <input type="hidden" name="type_id[]" value={{ $value['type_id'] }}>
+        <input type="hidden" name="ticket_max_num" value = {{ $values['ticket_max_num'] }}>
+        <input type="hidden" name="ticket_min_num" value = {{ $values['ticket_min_num'] }}>
     @endforeach
-
+    <div class="error_message">
+        @foreach($errors->all() as $error)
+            {{ $error }}
+        @endforeach
+    </div>
     <div class="itemname_line">現在価格</div>
     <div class="itemsector"><input class="textbox2" type="text" id="buy_money" name="buy_money" readonly=true>円</div>
     <input type="hidden" name="ticket_interval_start" value={{ $values['ticket_interval_start'] }}>

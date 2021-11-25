@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Requests\sales_period_free;
 use App\Http\Requests\sales_period_specialized;
 use App\Http\Requests\store_rule;
+use App\Http\Requests\ticket_code_reserve;
 
 //ログイン・ログアウト
 use Auth;
@@ -235,23 +236,27 @@ class TicketController extends Controller
         $values['ticket_num']=$tables07->ticket_num;
         //dump($values);
         //dump(carbon::now()->format("Y-m-d H:i:s"));//現在日時を2021-11-19 08:02:36でとる
-        dump($values);
+        //dump($values);
         return view("ticket_code_reserve",compact('values','ticket_code','sales_id'));
     }
 
 
 
+
+
     //post
     //20211121
-    //購入画面からPOSTで登録
-    public function ticket_code_reserve(REQUEST $request,$ticket_code,$sales_id){
-        $biz_id = 1;
+    //登録
+
+    public function ticket_code_reserve(ticket_code_reserve $request,$ticket_code,$sales_id){
+        dump('test');
+
+/*         $biz_id = 1;
         $user_id = 1;
         //$interval_start = carbon::now()->format('Y-m-d');
 
         $client = new Client();
         $url = 'http://127.0.0.1:8080/api/tickets/reserve';
-        dump($request);
         $param=array('user_id'=>$user_id,
                     'biz_id'=>$biz_id,
                     'ticket_code'=>$ticket_code,
@@ -274,7 +279,7 @@ class TicketController extends Controller
 
         //返り値を受け取る！
         //dump($response->getBody()->getContents());
-
+ */
 
 
         return view('ticket_thanks');
