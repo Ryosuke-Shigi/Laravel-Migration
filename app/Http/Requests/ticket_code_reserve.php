@@ -45,12 +45,22 @@ class ticket_code_reserve extends FormRequest
     {
 /*         dump($this->ticket_max_num);
         dump($this->ticket_min_num); */
-
+        dump($this);
         //変数での指定も可能
         return [
             //
             'buy_num.*'=>'required|integer|max:'.$this->ticket_max_num.'|min:'.$this->ticket_min_num
         ];
+    }
+
+    public function withValidator($validator){
+
+        $validator->after(function($validator){
+            if($this->ticket_max_num < array_sum($this->buy_num)){
+                $validator->errors()->add("合計","チケットの合計が購入可能数を超えています");
+            }
+        });
+
     }
 
     public function messages()
