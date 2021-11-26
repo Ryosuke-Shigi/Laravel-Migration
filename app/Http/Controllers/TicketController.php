@@ -249,7 +249,6 @@ class TicketController extends Controller
     //登録
 
     public function ticket_code_reserve(ticket_code_reserve $request,$ticket_code,$sales_id){
-        dump('test');
 
 /*         $biz_id = 1;
         $user_id = 1;
@@ -276,10 +275,10 @@ class TicketController extends Controller
         }
 
         $response = $client->request('POST',$url,['json'=>$param]);
-
+ */
         //返り値を受け取る！
         //dump($response->getBody()->getContents());
- */
+
 
 
         return view('ticket_thanks');
