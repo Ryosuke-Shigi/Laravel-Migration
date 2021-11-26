@@ -250,7 +250,7 @@ class TicketController extends Controller
 
     public function ticket_code_reserve(ticket_code_reserve $request,$ticket_code,$sales_id){
 
-/*         $biz_id = 1;
+        $biz_id = 1;
         $user_id = 1;
         //$interval_start = carbon::now()->format('Y-m-d');
 
@@ -275,7 +275,7 @@ class TicketController extends Controller
         }
 
         $response = $client->request('POST',$url,['json'=>$param]);
- */
+
         //返り値を受け取る！
         //dump($response->getBody()->getContents());
 

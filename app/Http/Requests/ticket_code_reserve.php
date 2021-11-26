@@ -57,7 +57,7 @@ class ticket_code_reserve extends FormRequest
 
         $validator->after(function($validator){
             if($this->ticket_max_num < array_sum($this->buy_num)){
-                $validator->errors()->add("合計","チケットの合計が購入可能数を超えています");
+                $validator->errors()->add("合計","チケットの合計が購入可能数を超えています 購入可能数は：".$this->ticket_max_num."　です。");
             }
         });
 
