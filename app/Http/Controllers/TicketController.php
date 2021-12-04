@@ -192,7 +192,6 @@ class TicketController extends Controller
         $values = array("tickets"=>array(),'ticket_min_num'=>0,'ticket_max_num'=>0,'ticket_interval_start'=>0,'ticket_num'=>0);
         $ticket_buy_num = 0;    //現在の購入数
 
-
         //ticket_codeとsales_idで　購入済みのチケット数を抽出する
         $client = new Client();
         $url = "http://127.0.0.1:8080/api/re_buyNum";
@@ -205,7 +204,6 @@ class TicketController extends Controller
         //Jsonデータをデコードする
         //ticket_code と sales_idより　購入されているチケットの枚数を取得
         $ticket_buy_num = json_decode($response->getBody(),true);
-
 
         //ticket_codeとsales_idで　購入済みのチケット数を抽出する
         $client2 = new Client();
@@ -234,9 +232,6 @@ class TicketController extends Controller
             $values['ticket_max_num'] = $temp;
         }
         $values['ticket_num']=$tables07->ticket_num;
-        //dump($values);
-        //dump(carbon::now()->format("Y-m-d H:i:s"));//現在日時を2021-11-19 08:02:36でとる
-        //dump($values);
         return view("ticket_code_reserve",compact('values','ticket_code','sales_id'));
     }
 
@@ -1041,7 +1036,7 @@ class TicketController extends Controller
         ->where('tables02.ticket_code',"=",$ticket_code)
         ->first();
 
-        return view("update_sales_period",compact('table'),compact('ticket_interval'));
+        return view("update_sales_period",compact('table'));
     }
 
 
@@ -1095,6 +1090,135 @@ class TicketController extends Controller
 
         return redirect('sales_period_index');
     }
+
+
+
+
+    //売上管理の初期画面
+    public function sales_management_init(){
+        //今日の年・月・開始日・最終日を取得
+        $year = carbon::now()->format('Y');
+        $month = carbon::now()->format('m');
+        $firstDay=carbon::now()->firstOfMonth()->format('d');
+        $lastDay=carbon::now()->lastOfMonth()->format('d');
+        //現在の月の始まりと終わりを　2021-12-01の形で作成
+        $interval_start=$year."-".$month."-".$firstDay;
+        $interval_end=$year."-".$month."-".$lastDay;
+        return view('sales_management_init',compact('interval_start','interval_end'));
+    }
+
+
+    //売上管理リスト表示 日付が入ってなかったら　日付がはいっていないとvalidateでもいい
+    public function sales_management_list(REQUEST $request){
+        $page=$request->page;
+
+        //validateかけるまでは
+        //売上日付（開始）と売上日付（終了）いずれかがはいっていなければsales_managementの初期画面に戻す
+        $interval_start = Carbon::parse($request->interval_start)->toDateTimeString();
+        $interval_end = Carbon::parse($request->interval_end)->toDateTimeString();
+
+        $interval_start = $request->interval_start;
+        $interval_end = $request->interval_end;
+
+       //salesManagement用webAPIを叩く
+        $client = new Client();
+        $url = "http://127.0.0.1:8080/api/salesManagement_data";
+        //$response = $client->request('GET',$url);
+        $response = $client->request('GET',$url,[
+                                        'query'=>[
+                                            'interval_start'=>$interval_start,
+                                            'interval_end'=>$interval_end,
+                                            'num'=>10,
+                                            'page'=>$page,//ひとまず固定
+                                            ]
+                                        ]);
+        $table=$response->getBody();
+        $table=json_decode($table,true);        //Jsonデータにデコードする
+
+
+
+
+
+/*
+        //総件数、ページ数、チケット情報　を返す
+        $value = array('total'=>0,'lastpage'=>0,'tickets'=>array());
+
+        //返し値の基本を作成
+         $tableAll = DB::table('tables01')
+        ->join('tables02','tables01.ticket_code','=','tables02.ticket_code')
+        ->join('tables05','tables01.ticket_code','=','tables05.ticket_code')
+
+        ->whereDate('tables02.sales_interval_end','>=',$interval_start)
+        ->whereDate('tables02.sales_interval_end','<=',$interval_end)
+
+        ->paginate(10,'*','page',$page);
+
+
+        //基本にデータをいれる
+        $value['total']=$tableAll->total();
+        $value['lastpage']=$tableAll->lastpage();
+        //一度Jsonデータにエンコードしてからデコードすると　単純なデータ構造の配列になる
+        $value['tickets']=json_decode(json_encode($tableAll->items()),true);
+
+        //↑をキャストで試してみたが、できななかった。。。
+        //$value['tickets']=(array)($tableAll->items());
+
+        //必要データを追加する
+        //table08,09,10を繋げる
+        $addData = DB::table('tables08')
+                ->join('tables09','tables08.reserv_code','=','tables09.reserv_code')
+                ->join('tables10','tables08.reserv_code','=','tables10.reserv_code')
+                ->get();
+
+        //売上枚数をとる
+        foreach($value['tickets'] as $index=>$table){
+            $buy_num=0;//売上数
+            $cancel_num=0;//キャンセル数
+            foreach($addData as $temp){
+                if(($table['ticket_code']==$temp->ticket_code) && ($table['ticket_name']==$temp->ticket_name)){
+                    //比較用　売上日付開始/終了を取得
+                    $start = new Carbon($request->interval_start);
+                    $end = new Carbon($request->sales_interval_end);
+                    if(($temp->ticket_status==1) || ($temp->ticket_status==2)){
+                        $middle = new Carbon($temp->svc_start);
+                        if($middle->between($start,$end)){
+                            $buy_num+=$temp->buy_num;
+                        }
+                    }elseif(($temp->ticket_status==0) || ($temp->ticket_status==3)){
+                        $middle = new Carbon($temp->ticket_end);
+                        if($middle->between($start,$end)){
+                            $buy_num+=$temp->buy_num;
+                        }
+                    }elseif($temp->ticket_status==9 || $temp->ticket_status==10){
+                        $middle = new Carbon($temp->updated_at);
+                        if($middle->between($start,$end)){
+                            //キャンセル料なし
+                            $cancel_num+=$temp->buy_num;
+                        }
+                    }
+                }
+            }
+            //追加　総売上数（キャンセル有無なし）
+            $value['tickets'][$index]+=array("buy_num"=>$buy_num);
+            //追加　キャンセル枚数
+            $value['tickets'][$index]+=array("cancel_num"=>$cancel_num);
+
+            //キャンセル料取得
+            foreach($addData as $temp){
+                if(($table['ticket_code']==$temp->ticket_code) && ($table['ticket_name']==$temp->ticket_name) && ($table['type_id']==$temp->type_id)){
+                    $value['tickets'][$index]+=array("cancel_money"=>$temp->cancel_money);
+                }
+            }
+            dump($value['tickets']);
+
+
+        }
+
+        return view('index'); */
+        return view('sales_management_list',compact('table','interval_start','interval_end','page'));
+    }
+
+
 
 
 

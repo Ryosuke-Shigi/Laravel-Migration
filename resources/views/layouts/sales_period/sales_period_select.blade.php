@@ -12,11 +12,8 @@
 @section('contents')
 <div class="container">
 
-
         <!--チケット登録画面-->
         @yield('content')
-
-
 
     </div>
 </div>

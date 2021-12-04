@@ -146,8 +146,13 @@ Route::get('put_sales_period/{ticket_code?}/{sales_id?}',"TicketController@put_s
 Route::post('put_sales_period/{ticket_code?}/{sales_id?}',"TicketController@put_sales_period");
 
 
-
-
+//売上管理（20211201）
+//初期画面
+Route::get("sales_management_init","TicketController@sales_management_init");
+Route::post("sales_management_init","TicketController@sales_management_init");
+//リスト表示
+Route::get("sales_management_list","TicketController@sales_management_list");
+Route::post("sales_management_list","TicketController@sales_management_list");
 
 
 

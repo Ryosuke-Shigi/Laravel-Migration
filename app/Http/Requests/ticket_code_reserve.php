@@ -63,10 +63,17 @@ class ticket_code_reserve extends FormRequest
 
     }
 
+    public function attributes(){
+        return [
+            'buy_num.*'=>'チケット数',
+        ];
+
+    }
+
     public function messages()
     {
         return [
-            'buy_num.*.required'=>'購入数が入力されていません',
+            'buy_num.*.required'=>':attributeが入力されていません',
             'buy_num.*.max'=>'購入枚数は、最小数：'.$this->ticket_min_num.'から'.'最大数：'.$this->ticket_max_num.'になります',
             'buy_num.*.min'=>'購入枚数は、最小数：'.$this->ticket_min_num.'から'.'最大数：'.$this->ticket_max_num.'になります'
         ];
