@@ -27,9 +27,28 @@
     <div class="right">
         <!-- 新規登録ボタン -->
         <div class="buttonsection">
-            <form method="post" name="newregister" action="store" enctype="multipart/form-data">
+            <form method="post" name="sales_management" action="sales_management_list" enctype="multipart/form-data">
                 @csrf
-                <button method="POST" type="submit" class="newcreatebtn">新規登録</button>
+                <table>
+                    <tr>
+                        <td>売 上 日 付（開始）</td>
+                        <td></td>
+                        <td>売 上 日 付（終了）</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="databox" type="date" id="interval_start" name="interval_start" value={{ $interval_start }}>
+                        </td>
+                        <td>～</td>
+                        <td>
+                            <input class="databox" type="date" id="interval_end" name="interval_end" value={{ $interval_end }}>
+                        </td>
+                        <td>
+                            <button method="POST" type="submit" class="searchButton">検索</button>
+                        </td>
+                    </tr>
+                </table>
             </form>
         </div>
 
