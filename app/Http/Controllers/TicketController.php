@@ -1102,10 +1102,13 @@ class TicketController extends Controller
         $firstDay=carbon::now()->firstOfMonth()->format('d');
         $lastDay=carbon::now()->lastOfMonth()->format('d');
         //現在の月の始まりと終わりを　2021-12-01の形で作成
-        $interval_start=$year."-".$month."-".$firstDay;
-        $interval_end=$year."-".$month."-".$lastDay;
+        $interval_start=$year."-".$month."-".$firstDay." "."00:00:00";
+        $interval_end=$year."-".$month."-".$lastDay." "."23:59:59";
         return view('sales_management_init',compact('interval_start','interval_end'));
     }
+
+
+
 
 
     //売上管理リスト表示 日付が入ってなかったら　日付がはいっていないとvalidateでもいい
@@ -1114,13 +1117,14 @@ class TicketController extends Controller
 
         //validateかけるまでは
         //売上日付（開始）と売上日付（終了）いずれかがはいっていなければsales_managementの初期画面に戻す
-        $interval_start = Carbon::parse($request->interval_start)->toDateTimeString();
-        $interval_end = Carbon::parse($request->interval_end)->toDateTimeString();
+        $interval_start = Carbon::parse($request->interval_start." "."00:00:00")->toDateTimeString();
+        $interval_end = Carbon::parse($request->interval_end." "."23:59:59")->toDateTimeString();
+
 
         $interval_start = $request->interval_start;
         $interval_end = $request->interval_end;
 
-       //salesManagement用webAPIを叩く
+        //salesManagement用webAPIを叩く
         $client = new Client();
         $url = "http://127.0.0.1:8080/api/salesManagement_data";
         //$response = $client->request('GET',$url);
@@ -1139,9 +1143,10 @@ class TicketController extends Controller
 
 
 
-/*
-        //総件数、ページ数、チケット情報　を返す
-        $value = array('total'=>0,'lastpage'=>0,'tickets'=>array());
+
+
+//テスト用
+/*         $value = array('total'=>0,'lastpage'=>0,'tickets'=>array());
 
         //返し値の基本を作成
          $tableAll = DB::table('tables01')
@@ -1152,7 +1157,6 @@ class TicketController extends Controller
         ->whereDate('tables02.sales_interval_end','<=',$interval_end)
 
         ->paginate(10,'*','page',$page);
-
 
         //基本にデータをいれる
         $value['total']=$tableAll->total();
@@ -1169,7 +1173,8 @@ class TicketController extends Controller
                 ->join('tables09','tables08.reserv_code','=','tables09.reserv_code')
                 ->join('tables10','tables08.reserv_code','=','tables10.reserv_code')
                 ->get();
-
+        dump($tableAll);
+        dump($addData);
         //売上枚数をとる
         foreach($value['tickets'] as $index=>$table){
             $buy_num=0;//売上数
@@ -1177,8 +1182,8 @@ class TicketController extends Controller
             foreach($addData as $temp){
                 if(($table['ticket_code']==$temp->ticket_code) && ($table['ticket_name']==$temp->ticket_name)){
                     //比較用　売上日付開始/終了を取得
-                    $start = new Carbon($request->interval_start);
-                    $end = new Carbon($request->sales_interval_end);
+                    $start = new Carbon($interval_start);
+                    $end = new Carbon($interval_end);
                     if(($temp->ticket_status==1) || ($temp->ticket_status==2)){
                         $middle = new Carbon($temp->svc_start);
                         if($middle->between($start,$end)){
@@ -1202,19 +1207,18 @@ class TicketController extends Controller
             $value['tickets'][$index]+=array("buy_num"=>$buy_num);
             //追加　キャンセル枚数
             $value['tickets'][$index]+=array("cancel_num"=>$cancel_num);
-
-            //キャンセル料取得
-            foreach($addData as $temp){
-                if(($table['ticket_code']==$temp->ticket_code) && ($table['ticket_name']==$temp->ticket_name) && ($table['type_id']==$temp->type_id)){
-                    $value['tickets'][$index]+=array("cancel_money"=>$temp->cancel_money);
-                }
-            }
-            dump($value['tickets']);
-
+            //追加　キャンセルなし枚数
+            $value['tickets'][$index]+=array("no_cancel_num"=>$buy_num-$cancel_num);
+            //キャンセル料を計算して登録
+            $value['tickets'][$index]+=array("cancel_money"=>round($value['tickets'][$index]['type_money']*$value['tickets'][$index]['cancel_rate']/100));
+            //合計額
+            $value['tickets'][$index]+=array("total_money"=>($value['tickets'][$index]['type_money']*$value['tickets'][$index]['buy_num'])+($value['tickets'][$index]['cancel_money']*$cancel_num));
 
         }
+ */
 
-        return view('index'); */
+
+
         return view('sales_management_list',compact('table','interval_start','interval_end','page'));
     }
 
