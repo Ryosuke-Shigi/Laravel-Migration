@@ -1132,91 +1132,12 @@ class TicketController extends Controller
                                         'query'=>[
                                             'interval_start'=>$interval_start,
                                             'interval_end'=>$interval_end,
-                                            'num'=>10,
+                                            'num'=>2,
                                             'page'=>$page,//ひとまず固定
                                             ]
                                         ]);
         $table=$response->getBody();
         $table=json_decode($table,true);        //Jsonデータにデコードする
-
-
-
-
-
-
-
-//テスト用
-/*         $value = array('total'=>0,'lastpage'=>0,'tickets'=>array());
-
-        //返し値の基本を作成
-         $tableAll = DB::table('tables01')
-        ->join('tables02','tables01.ticket_code','=','tables02.ticket_code')
-        ->join('tables05','tables01.ticket_code','=','tables05.ticket_code')
-
-        ->whereDate('tables02.sales_interval_end','>=',$interval_start)
-        ->whereDate('tables02.sales_interval_end','<=',$interval_end)
-
-        ->paginate(10,'*','page',$page);
-
-        //基本にデータをいれる
-        $value['total']=$tableAll->total();
-        $value['lastpage']=$tableAll->lastpage();
-        //一度Jsonデータにエンコードしてからデコードすると　単純なデータ構造の配列になる
-        $value['tickets']=json_decode(json_encode($tableAll->items()),true);
-
-        //↑をキャストで試してみたが、できななかった。。。
-        //$value['tickets']=(array)($tableAll->items());
-
-        //必要データを追加する
-        //table08,09,10を繋げる
-        $addData = DB::table('tables08')
-                ->join('tables09','tables08.reserv_code','=','tables09.reserv_code')
-                ->join('tables10','tables08.reserv_code','=','tables10.reserv_code')
-                ->get();
-        dump($tableAll);
-        dump($addData);
-        //売上枚数をとる
-        foreach($value['tickets'] as $index=>$table){
-            $buy_num=0;//売上数
-            $cancel_num=0;//キャンセル数
-            foreach($addData as $temp){
-                if(($table['ticket_code']==$temp->ticket_code) && ($table['ticket_name']==$temp->ticket_name)){
-                    //比較用　売上日付開始/終了を取得
-                    $start = new Carbon($interval_start);
-                    $end = new Carbon($interval_end);
-                    if(($temp->ticket_status==1) || ($temp->ticket_status==2)){
-                        $middle = new Carbon($temp->svc_start);
-                        if($middle->between($start,$end)){
-                            $buy_num+=$temp->buy_num;
-                        }
-                    }elseif(($temp->ticket_status==0) || ($temp->ticket_status==3)){
-                        $middle = new Carbon($temp->ticket_end);
-                        if($middle->between($start,$end)){
-                            $buy_num+=$temp->buy_num;
-                        }
-                    }elseif($temp->ticket_status==9 || $temp->ticket_status==10){
-                        $middle = new Carbon($temp->updated_at);
-                        if($middle->between($start,$end)){
-                            //キャンセル料なし
-                            $cancel_num+=$temp->buy_num;
-                        }
-                    }
-                }
-            }
-            //追加　総売上数（キャンセル有無なし）
-            $value['tickets'][$index]+=array("buy_num"=>$buy_num);
-            //追加　キャンセル枚数
-            $value['tickets'][$index]+=array("cancel_num"=>$cancel_num);
-            //追加　キャンセルなし枚数
-            $value['tickets'][$index]+=array("no_cancel_num"=>$buy_num-$cancel_num);
-            //キャンセル料を計算して登録
-            $value['tickets'][$index]+=array("cancel_money"=>round($value['tickets'][$index]['type_money']*$value['tickets'][$index]['cancel_rate']/100));
-            //合計額
-            $value['tickets'][$index]+=array("total_money"=>($value['tickets'][$index]['type_money']*$value['tickets'][$index]['buy_num'])+($value['tickets'][$index]['cancel_money']*$cancel_num));
-
-        }
- */
-
 
 
         return view('sales_management_list',compact('table','interval_start','interval_end','page'));
