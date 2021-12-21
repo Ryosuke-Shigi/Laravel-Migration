@@ -20,6 +20,8 @@
                     <button type="submit" class="btn" formaction="ticket_list">チケット一覧</button>
                     <button type="submit" class="btn" formaction="view_ticket_reserve">購入（POST)</button>
                     <button type="submit" class="btn" formaction="sales_management_init">売上管理</button>
+                    <button type="submit" class="btn" formaction="sales_management_select_btn_id_init">売上管理ID</button>
+
                 </div>
             </form>
     </div>

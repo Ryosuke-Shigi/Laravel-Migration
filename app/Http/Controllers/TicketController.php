@@ -1106,7 +1106,18 @@ class TicketController extends Controller
         $interval_end=$year."-".$month."-".$lastDay." "."23:59:59";
         return view('sales_management_init',compact('interval_start','interval_end'));
     }
-
+    //売上管理の初期画面
+    public function sales_management_select_btn_id_init(){
+        //今日の年・月・開始日・最終日を取得
+        $year = carbon::now()->format('Y');
+        $month = carbon::now()->format('m');
+        $firstDay=carbon::now()->firstOfMonth()->format('d');
+        $lastDay=carbon::now()->lastOfMonth()->format('d');
+        //現在の月の始まりと終わりを　2021-12-01の形で作成
+        $interval_start=$year."-".$month."-".$firstDay." "."00:00:00";
+        $interval_end=$year."-".$month."-".$lastDay." "."23:59:59";
+        return view('sales_management_select_btn_id_init',compact('interval_start','interval_end'));
+    }
 
 
 
@@ -1132,7 +1143,7 @@ class TicketController extends Controller
                                         'query'=>[
                                             'interval_start'=>$interval_start,
                                             'interval_end'=>$interval_end,
-                                            'num'=>2,
+                                            'num'=>6,
                                             'page'=>$page,//ひとまず固定
                                             ]
                                         ]);
@@ -1141,6 +1152,40 @@ class TicketController extends Controller
 
 
         return view('sales_management_list',compact('table','interval_start','interval_end','page'));
+    }
+
+    //売上管理リスト表示 日付が入ってなかったら　日付がはいっていないとvalidateでもいい
+    public function sales_management_list_select_btn_id(REQUEST $request){
+
+        $page=$request->page;
+
+        //validateかけるまでは
+        //売上日付（開始）と売上日付（終了）いずれかがはいっていなければsales_managementの初期画面に戻す
+        $interval_start = Carbon::parse($request->interval_start." "."00:00:00")->toDateTimeString();
+        $interval_end = Carbon::parse($request->interval_end." "."23:59:59")->toDateTimeString();
+
+
+        $interval_start = $request->interval_start;
+        $interval_end = $request->interval_end;
+
+        //salesManagement用webAPIを叩く
+        $client = new Client();
+        $url = "http://127.0.0.1:8080/api/salesManagement_data_select_btn_id";
+        //$response = $client->request('GET',$url);
+        $response = $client->request('GET',$url,[
+                                        'query'=>[
+                                            'interval_start'=>$interval_start,
+                                            'interval_end'=>$interval_end,
+                                            'num'=>20,
+                                            'page'=>$page,//ひとまず固定
+                                            ]
+                                        ]);
+        $table=$response->getBody();
+        $table=json_decode($table,true);        //Jsonデータにデコードする
+
+
+
+        return view('sales_management_list_select_btn_id',compact('table','interval_start','interval_end','page'));
     }
 
 

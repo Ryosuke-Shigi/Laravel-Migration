@@ -150,11 +150,16 @@ Route::post('put_sales_period/{ticket_code?}/{sales_id?}',"TicketController@put_
 //初期画面
 Route::get("sales_management_init","TicketController@sales_management_init");
 Route::post("sales_management_init","TicketController@sales_management_init");
+//初期画面
+Route::get("sales_management_select_btn_id_init","TicketController@sales_management_select_btn_id_init");
+Route::post("sales_management_select_btn_id_init","TicketController@sales_management_select_btn_id_init");
 //リスト表示
 Route::get("sales_management_list","TicketController@sales_management_list");
 Route::post("sales_management_list","TicketController@sales_management_list");
 
-
+//リスト select_btn_id追加表示
+Route::get("sales_management_list_select_btn_id","TicketController@sales_management_list_select_btn_id");
+Route::post("sales_management_list_select_btn_id","TicketController@sales_management_list_select_btn_id");
 
 
 //ログイン　追加
