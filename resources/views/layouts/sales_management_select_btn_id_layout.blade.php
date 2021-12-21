@@ -28,7 +28,7 @@
     <div class="right">
         <!-- 新規登録ボタン -->
         <div class="buttonsection">
-            <form method="post" name="sales_management" action="sales_management_list" enctype="multipart/form-data">
+            <form method="post" name="sales_management" action="sales_management_list_select_btn_id" enctype="multipart/form-data">
                 @csrf
                 <table>
                     <tr>
